@@ -116,27 +116,7 @@ export default class ChatScreen extends React.Component {
       },],
     },]
 
-  state = {
-    issuepage: false,
-    hintPage: false,
-    thoughtpage: false,
-    protocolpage: false,
-    finalprotocol: false,
-    protocoladd: false,
-    checkprotocol: false,
-    reprotocol: false,
-    thoughtorder: null,
-    issuenumber: 0,
-    changeheight: new Animated.Value(-305),
-    chatheight: new Animated.Value(-750),
-    openbottom: false,
-    onFocus: false,
-    openemoji: false,
-    inputtext: null,
-    protocolorder: 0,
-    speakamount: 2,
-    reload: false
-  }
+
 
   constructor(props) {
     super(props)
@@ -144,6 +124,27 @@ export default class ChatScreen extends React.Component {
       reload = !this.state.reload;
       this.setState({ reload: reload });
     });
+    this.state = {
+      issuepage: false,
+      hintPage: false,
+      thoughtpage: false,
+      protocolpage: false,
+      finalprotocol: false,
+      protocoladd: false,
+      checkprotocol: false,
+      reprotocol: false,
+      thoughtorder: null,
+      issuenumber: 0,
+      changeheight: new Animated.Value(-305),
+      chatheight: new Animated.Value(-750),
+      openbottom: false,
+      onFocus: false,
+      openemoji: false,
+      inputtext: null,
+      protocolorder: 0,
+      speakamount: 2,
+      reload: false
+    }
   }
 
   _onFocus = () => {
@@ -268,6 +269,7 @@ export default class ChatScreen extends React.Component {
       this.scrollView.scrollToEnd();
 
       speakamount = this.state.speakamount + 1
+
       this.setState({
         inputtext: null,
         speakamount: speakamount
@@ -998,8 +1000,13 @@ export default class ChatScreen extends React.Component {
                 <View style={[styles.chatcontainer, { backgroundColor: '#F4EDE9' }]} >
                   <View style={{ flex: 0.45 }} >
                     <View style={{ flex: 0.2, width: '90%', alignSelf: 'center', justifyContent: 'center' }}>
-                      <View >
-                        <Text style={{ fontWeight: 'bold', lineHeight: 21, fontSize: 18, color: '#818181' }}>深入對話</Text>
+                      <View style={{ flexDirection: 'row', height: '100%', alignItems: 'center' }} >
+                        <View style={{ height: '100%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center' }}>
+                          <Image style={{ height: '80%', aspectRatio: 1, resizeMode: 'contain', }} source={require('../assets/icon/iceberg_icon.png')} />
+                        </View>
+                        <View>
+                          <Text style={{ fontWeight: 'bold', lineHeight: 21, fontSize: 18, color: '#818181' }}>冰山溝通</Text>
+                        </View>
                       </View>
                     </View>
                     <View style={{ flex: 0.8 }}>
@@ -1121,7 +1128,7 @@ export default class ChatScreen extends React.Component {
                     </TouchableOpacity>
                   </View>
                   <View style={{ marginLeft: 10, width: 40, marginTop: -5 }}>
-                    {this.state.openbottom ?
+                    {(this.state.openbottom || this.state.inputtext != null) ?
                       <Icon name='angle-right' size={40} color='#6E6E6E' type='font-awesome' onPress={() => this._sentText()} underlayColor='#FAC75E' />
                       :
                       <Icon name='angle-up' size={40} color='#6E6E6E' type='font-awesome' onPress={() => this._taggleChat()} underlayColor='#FAC75E' />

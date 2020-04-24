@@ -49,7 +49,7 @@ export default class LoginScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={{ flex: 0.4, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <Image style={{ width: '70%', resizeMode: 'contain' }} source={require('../assets/images/logo.png')} />
+                    <Image style={{ width: '70%', resizeMode: 'contain', marginTop: 40 }} source={require('../assets/images/logo.png')} />
                 </View>
 
                 <View style={{ flex: 0.6, width: '100%', alignItems: 'center' }}>
@@ -76,11 +76,11 @@ export default class LoginScreen extends React.Component {
                             </View>
                         </View>
                         <View style={{ flex: 0.5, justifyContent: 'space-evenly', alignItems: 'center', paddingBottom: '5%' }}>
-                            <TouchableOpacity style={{ flex: 0.3, width: '70%', backgroundColor: '#FACE72', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoSelectScreen()}>
+                            <TouchableOpacity style={{ flex: 0.3, width: '70%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoSelectScreen()}>
                                 <Text style={{ color: 'white', fontSize: 17 }}>登入</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flex: 0.3, width: '70%', backgroundColor: '#83BEBA', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoHomeStack()}>
-                                <Text style={{ color: 'white', fontSize: 17 }}>註冊</Text>
+                            <TouchableOpacity style={{ flex: 0.3, width: '70%', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }}>註冊新帳號</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 10,
         flex: 1,
-        backgroundColor: '#EFDED2',
+        backgroundColor: '#F4EDE9',
         alignItems: 'center',
     },
     Logo: {
