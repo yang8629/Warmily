@@ -6,8 +6,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BottomTabNavigator from './navigation/BottomTabNavigator';
+import StackNavigator from './navigation/MainStackNavigator';
 import useLinking from './navigation/useLinking';
+
+function btoa(data) { return new Buffer(data, "binary").toString("base64"); }
+function atob(data) { return new Buffer(data, "base64").toString("binary"); }
 
 const Stack = createStackNavigator();
 
@@ -50,8 +53,8 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
+          <Stack.Navigator headerMode='none'>
+            <Stack.Screen name="Root" component={StackNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
