@@ -30,7 +30,7 @@ export default class IssueScreen extends React.Component {
       {
         key: 1,
         text: 'foodpanda',
-        img: require('../assets/images/Monster1.png'),
+        img: require('../assets/images/monster01_blue.png'),
         type: 1,
       }, {
         key: 2,
@@ -222,11 +222,11 @@ export default class IssueScreen extends React.Component {
             </View>
             <View style={styles.chatimage}>
               <View style={{ marginTop: 25 }}>
-                <Image style={styles.MonsterImgL} source={require('../assets/images/Monster1.png')} />
+                <Image style={styles.MonsterImgL} source={require('../assets/images/monster01_blue.png')} />
                 <Text style={styles.imgtext}>我</Text>
               </View>
               <View style={{ marginTop: 10 }}>
-                <Image style={styles.MonsterImgR} source={require('../assets/images/Monster2.png')} />
+                <Image style={styles.MonsterImgR} source={require('../assets/images/monster01_blue.png')} />
                 <Text style={styles.imgtext}>媽媽</Text>
               </View>
             </View>

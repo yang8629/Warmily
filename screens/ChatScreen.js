@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Platform, Image, Animated, Easing, Keyboard, TextInput, StatusBar, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Icon } from 'react-native-elements'
+import { Slider } from "@miblanchard/react-native-slider";
 import FireBaseManager from '../components/FireBaseManager';
 import What from '../assets/Emoji/What.svg'
 import Angry from '../assets/Emoji/Angry.svg'
@@ -13,11 +14,12 @@ import Good from '../assets/Emoji/Good.svg'
 
 export default class ChatScreen extends React.Component {
 
-  firebase = FireBaseManager.getInstance()
+  FireBase = FireBaseManager.getInstance()
   backiconsize = 50;
   box = 260;
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
+  family = this.FireBase._getFamily();
 
   color = [
     {
@@ -51,6 +53,31 @@ export default class ChatScreen extends React.Component {
       title: '沒收我的手機，限制我使用的時間',
       finish: false,
       time: '2020.4.4',
+      input1: '希望我不要過度沉迷於手機',
+      input2: '自行有效控管使用手機的時間',
+      input3: '多信任我一點,不要沒收我的手機',
+      from: {
+        head: require('../assets/images/f31.png'),
+        input1: '晚上12點要做什麼事情?',
+        input2: '抱佛腳',
+        input3: '因為零時抱佛腳',
+        emoji: [{
+          type: 'Happy',
+          text: '黑皮',
+          color: '#ed9c8a',
+          textinput: '因為自己不被信任',
+          image: require('../assets/Emoji/Sad.png'),
+          value: 4,
+        },],
+      },
+      emoji: [{
+        type: 'Sad',
+        text: '哭哭',
+        color: '#ed9c8a',
+        textinput: '因為自己不被信任',
+        image: require('../assets/Emoji/Sad.png'),
+        value: 4,
+      },],
       thought: [{
         from: 0,//媽媽
         title: '我覺得你沒有辦法控制自己手機使用的時間......',
@@ -67,7 +94,8 @@ export default class ChatScreen extends React.Component {
         confirm: true,
         modify: false,
         recent: [{
-          text: '阿拉花呱'
+          text: '阿拉花呱',
+          img: require('../assets/images/f51.png'),
         }],
       },
       {
@@ -75,11 +103,12 @@ export default class ChatScreen extends React.Component {
         confirm: false,
         modify: true,
         recent: [{
-          text: null,
+          text: '你才不會',
+          img: require('../assets/images/f51.png'),
         }],
       },
       {
-        text: '我會自我管理時間，保證成績能維持在班級前五',
+        text: '傅紫恩很醜',
         confirm: true,
         modify: true,
         recent: [{
@@ -100,6 +129,18 @@ export default class ChatScreen extends React.Component {
       title: '參加社團影響課業嗎?',
       finish: false,
       time: '2019.12.24',
+      input1: '希望我不要過度沉迷於手機',
+      input2: '自行有效控管使用手機的時間',
+      input3: '多信任我一點,不要沒收我的手機',
+      from: null,
+      emoji: [{
+        type: 'Sad',
+        text: '哭哭',
+        color: '#ed9c8a',
+        textinput: '因為自己不被信任',
+        image: require('../assets/Emoji/Sad.png'),
+        value: 4,
+      },],
       thought: [{
         from: 1,
         title: '你一個禮拜應該整理一次房間',
@@ -116,7 +157,55 @@ export default class ChatScreen extends React.Component {
       },],
     },]
 
-
+  emoji = [{
+    show: true,
+    type: 'Angry',
+    text: '生氣',
+    color: '#F4F187',
+    image: require('../assets/Emoji/Angry.png'),
+  }, {
+    show: false,
+    type: 'Confused',
+    text: '困惑',
+    color: '#F4F187',
+    image: require('../assets/Emoji/Confused.png'),
+  }, {
+    show: false,
+    type: 'Good',
+    text: '很棒',
+    color: '#efcd89',
+    image: require('../assets/Emoji/Good.png'),
+  }, {
+    show: false,
+    type: 'Happy',
+    text: '黑皮',
+    color: '#ed9c8a',
+    image: require('../assets/Emoji/Happy.png'),
+  }, {
+    show: false,
+    type: 'NotGood',
+    text: '不太好',
+    color: '#879cf4',
+    image: require('../assets/Emoji/NotGood.png'),
+  }, {
+    show: false,
+    type: 'Sad',
+    text: '哭哭',
+    color: '#ed9c8a',
+    image: require('../assets/Emoji/Sad.png'),
+  }, {
+    show: false,
+    type: 'Shocked',
+    text: '驚訝',
+    color: '#879cf4',
+    image: require('../assets/Emoji/Shocked.png'),
+  }, {
+    show: false,
+    type: 'What',
+    text: '黑人?',
+    color: '#efcd89',
+    image: require('../assets/Emoji/What.png'),
+  },]
 
   constructor(props) {
     super(props)
@@ -133,6 +222,8 @@ export default class ChatScreen extends React.Component {
       protocoladd: false,
       checkprotocol: false,
       reprotocol: false,
+      icebergdetail: false,
+      detailpage: 0,
       thoughtorder: null,
       issuenumber: 0,
       changeheight: new Animated.Value(-305),
@@ -140,10 +231,12 @@ export default class ChatScreen extends React.Component {
       openbottom: false,
       onFocus: false,
       openemoji: false,
+      openchat: false,
       inputtext: null,
       protocolorder: 0,
       speakamount: 2,
-      reload: false
+      reload: false,
+      id: this.FireBase._getID()
     }
   }
 
@@ -177,8 +270,11 @@ export default class ChatScreen extends React.Component {
       }).start();
     }
 
+    openbottom = !this.state.openbottom
+    openchat = !this.state.openchat
     this.setState({
-      openbottom: !this.state.openbottom,
+      openbottom,
+      openchat,
     })
 
   }
@@ -242,7 +338,6 @@ export default class ChatScreen extends React.Component {
         duration: 200,
       }).start();
       this.box = 260;
-
     }
 
     this.setState({
@@ -385,7 +480,7 @@ export default class ChatScreen extends React.Component {
     this.setState({ checkprotocol: false })
   }
 
-  _reProtocol = () => {
+  _toggleReProtocol = () => {
     buffer = this.state.reprotocol
     this.setState({
       reprotocol: !buffer
@@ -395,28 +490,51 @@ export default class ChatScreen extends React.Component {
   _newProtocol = () => {
     const text = this.state.inputtext;
     if (text != null) {
+      if (this.state.id == 1) {
+        buffer = this.issues[this.state.issuenumber].protocol[this.state.protocolorder]
 
-      buffer = this.issues[this.state.issuenumber].protocol[this.state.protocolorder]
+        if (this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text == null) {
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text = buffer.text
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].img = require('../assets/icon/cancel.png')
+        } else {
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent.unshift({
+            text: buffer.text,
+            img: require('../assets/icon/cancel.png')
+          })
+        }
 
-      if (this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text == null) {
-        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text = buffer.text
+        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].text = text
+        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].confirm = true
+        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].modify = true
+
+        this.setState({
+          inputtext: null,
+          checkprotocol: false,
+          reprotocol: false,
+        })
       } else {
-        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent.unshift({
-          text: buffer.text,
+
+        buffer = this.issues[this.state.issuenumber].protocol[this.state.protocolorder]
+
+        if (this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text == null) {
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].text = text
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent[0].img = require('../assets/images/f11.png')
+        } else {
+          this.issues[this.state.issuenumber].protocol[this.state.protocolorder].recent.unshift({
+            text: text,
+            img: require('../assets/images/f51.png'),
+          })
+        }
+
+        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].confirm = false
+        this.issues[this.state.issuenumber].protocol[this.state.protocolorder].modify = true
+
+        this.setState({
+          inputtext: null,
+          checkprotocol: false,
+          reprotocol: false,
         })
       }
-
-      this.issues[this.state.issuenumber].protocol[this.state.protocolorder].text = text
-      this.issues[this.state.issuenumber].protocol[this.state.protocolorder].confirm = false
-      this.issues[this.state.issuenumber].protocol[this.state.protocolorder].modify = false
-
-
-      this.setState({
-        inputtext: null,
-        checkprotocol: false,
-        reprotocol: false,
-      })
-
     }
   }
 
@@ -435,11 +553,64 @@ export default class ChatScreen extends React.Component {
     this.setState({ speakamount: speakamount })
   }
 
+  _getOrder = (buffer) => {
+    switch (buffer) {
+      case 0:
+        return '條例一';
+      case 1:
+        if (this.issues[this.state.issuenumber].protocol[0].text == null) {
+          return '條例一';
+        } else {
+          return '條例二';
+        }
+      case 2:
+        return '條例三';
+      case 3:
+        return '條例四';
+      case 4:
+        return '條例五';
+      case 5:
+        return '條例六';
+      case 6:
+        return '條例七';
+      case 7:
+        return '條例八';
+      case 8:
+        return '條例九';
+      case 9:
+        return '條例十';
+    }
+  }
+
+  _deletProtocol = () => {
+
+    if (this.issues[this.state.issuenumber].protocol.length == 1) {
+      this.issues[this.state.issuenumber].protocol[0].text = null
+    } else {
+      this.issues[this.state.issuenumber].protocol.splice(this.state.protocolorder, 1)
+    }
+
+    this.setState({
+      checkprotocol: false,
+      protocolorder: 0,
+    })
+  }
+
+  _toggleIcebergdetail = () => {
+    buffer = this.state.icebergdetail
+    this.setState({ icebergdetail: !buffer })
+  }
+
+  _switchDetailpage = (buffer) => {
+    x = Math.round(buffer.nativeEvent.contentOffset.x / this.screenWidth)
+    this.setState({ detailpage: x })
+  }
+
   render() {
-    const { issuenumber, protocolorder, speakamount } = this.state
-    if ((a = this.firebase._getIssue()) != null) {
+    const { issuenumber, protocolorder, speakamount, id } = this.state
+    if ((a = this.FireBase._getIssue()) != null) {
       this.issues.unshift(a)
-      this.firebase._clearIssue()
+      this.FireBase._clearIssue()
     }
     const issues = this.issues.map((buffer, index) => {
       return (
@@ -472,9 +643,14 @@ export default class ChatScreen extends React.Component {
           <Protocol key={index} order={index} final={final} text={buffer.text} confirm={buffer.confirm} modify={buffer.modify || false} onPress={() => this._checkProtocol(index)} />
         )
       } else {
-        return (null)
+        return (
+          <View key={index}  >
+            <Text style={{ fontSize: 20, color: 'white' }}>創立你們的第一個條例吧!</Text>
+          </View>
+        )
       }
     });
+
     const finalprotocol = this.issues[issuenumber].protocol.map((buffer, index) => {
       if (buffer.text != null) {
         return (
@@ -484,41 +660,8 @@ export default class ChatScreen extends React.Component {
         return (null)
       }
     });
-    var protocolamount;
-    switch (this.issues[issuenumber].protocol.length) {
-      case 1:
-        if (this.issues[issuenumber].protocol[0].text == null) {
-          protocolamount = '條例一';
-          break;
-        } else {
-          protocolamount = '條例二';
-          break;
-        }
-      case 2:
-        protocolamount = '條例三';
-        break;
-      case 3:
-        protocolamount = '條例四';
-        break;
-      case 4:
-        protocolamount = '條例五';
-        break;
-      case 5:
-        protocolamount = '條例六';
-        break;
-      case 6:
-        protocolamount = '條例七';
-        break;
-      case 7:
-        protocolamount = '條例八';
-        break;
-      case 8:
-        protocolamount = '條例九';
-        break;
-      case 9:
-        protocolamount = '條例十';
-        break;
-    }
+
+    const protocolamount = this._getOrder(this.issues[issuenumber].protocol.length);
 
     const block = this.issues[issuenumber].thought.map((buffer, index) => {
       if (buffer.from == 0) {
@@ -546,20 +689,23 @@ export default class ChatScreen extends React.Component {
       }
     })
 
-    const recentprotocol = this.issues[issuenumber].protocol[protocolorder].recent.map((buffer, index) => {
-      if (buffer.text != null) {
-        return (
-          <View key={index} style={{ flexDirection: 'row', width: '70%', marginVertical: 10 }}>
-            <Image style={{ width: 40, aspectRatio: 1 }} source={require('../assets/images/f11.png')} />
-            <View style={{ marginLeft: 10, justifyContent: 'center' }}>
-              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }} >{buffer.text}</Text>
+    const recentprotocol = this.issues[issuenumber].protocol[protocolorder].recent[0].text == null ?
+      null
+      :
+      this.issues[issuenumber].protocol[protocolorder].recent.map((buffer, index) => {
+        if (buffer.text != null) {
+          return (
+            <View key={index} style={{ flexDirection: 'row', width: '70%', marginVertical: 10 }}>
+              <Image style={{ width: 40, aspectRatio: 1 }} source={buffer.img} />
+              <View style={{ marginLeft: 10, justifyContent: 'center' }}>
+                <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }} >{buffer.text}</Text>
+              </View>
             </View>
-          </View>
-        )
-      } else {
-        return null
-      }
-    })
+          )
+        } else {
+          return null
+        }
+      })
 
     return (
       <View style={styles.container} >
@@ -741,43 +887,85 @@ export default class ChatScreen extends React.Component {
                           <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }} />
                         </View>
 
-                        <View style={{ flex: 0.9, justifyContent: 'center' }} >
-                          <View style={[{ width: '70%', backgroundColor: 'white', alignSelf: 'center', alignItems: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 20 }, this.issues[issuenumber].protocol[protocolorder].recent[0].text == null && { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }]}>
-                            <View style={{ width: '70%', marginVertical: 10, flexDirection: 'row' }}>
-                              {HeadIcon(this.issues[issuenumber].protocol[protocolorder].confirm, this.issues[issuenumber].protocol[protocolorder].modify)}
-                              <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, lineHeight: 21, color: '#447291' }}>{protocolamount}</Text>
-                              </View>
-                            </View>
+                        {id == 1 ?
+                          <View style={{ flex: 0.9, justifyContent: 'center' }} >
+                            <View style={[{ width: '70%', backgroundColor: 'white', alignSelf: 'center', alignItems: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 20 }, this.issues[issuenumber].protocol[protocolorder].recent[0].text == null && { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }]}>
+                              <View style={{ width: '70%', marginVertical: 10, flexDirection: 'row' }}>
 
-                            <View style={{ width: '70%', marginTop: 10 }}>
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }} >{this.issues[issuenumber].protocol[protocolorder].text}</Text>
-                            </View>
+                                {HeadIcon(this.issues[issuenumber].protocol[protocolorder].confirm, this.issues[issuenumber].protocol[protocolorder].modify)}
 
-                            <View style={{ flexDirection: 'row', width: '70%', marginVertical: 30, justifyContent: 'space-between' }}>
-                              <View style={{ flex: 0.2, alignItems: 'flex-end' }} >
-                                <TouchableOpacity style={{ width: '100%', aspectRatio: 1, borderRadius: '50%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._reProtocol()} activeOpacity={0.8} >
-                                  <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/cancel.png')} />
-                                </TouchableOpacity>
+                                <View style={{ alignSelf: 'center' }}>
+                                  <Text style={{ fontSize: 18, lineHeight: 21, color: '#447291' }}>{this._getOrder(protocolorder)}</Text>
+                                </View>
                               </View>
 
-                              <View style={{ flex: 0.2, alignItems: 'flex-start' }}>
-                                <TouchableOpacity style={{ width: '100%', aspectRatio: 1, borderRadius: '50%', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._confirmProtocol()} activeOpacity={0.8} >
-                                  <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/check1.png')} />
-                                </TouchableOpacity>
+                              <View style={{ width: '70%', marginTop: 10 }}>
+                                <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }} >{this.issues[issuenumber].protocol[protocolorder].text}</Text>
                               </View>
-                            </View>
 
+                              <View style={{ flexDirection: 'row', width: '70%', marginVertical: 30, justifyContent: 'space-between' }}>
+                                <View style={{ flex: 0.4, alignItems: 'flex-end' }} >
+                                  <TouchableOpacity style={{ width: '100%', aspectRatio: 2, borderRadius: '15%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#C5C5C5' }} onPress={() => this._toggleReProtocol()} activeOpacity={0.8} >
+                                    <Text style={{ fontSize: 16, lineHeight: 19, color: 'white' }}>修改</Text>
+                                  </TouchableOpacity>
+                                </View>
+
+                                <View style={{ flex: 0.4, alignItems: 'flex-end' }} >
+                                  <TouchableOpacity style={{ width: '100%', aspectRatio: 2, borderRadius: '15%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#C8E6FA' }} activeOpacity={0.8} onPress={() => this._deletProtocol()} >
+                                    <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>刪除</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                            </View>
+                            {this.issues[issuenumber].protocol[protocolorder].recent[0].text == null ?
+                              null
+                              :
+                              <View style={{ width: '70%', paddingBottom: 10, minHeight: 80, alignSelf: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, backgroundColor: '#C8E6FA', alignItems: 'center', justifyContent: 'center' }} >
+                                {recentprotocol}
+                              </View>
+                            }
                           </View>
-                          {this.issues[issuenumber].protocol[protocolorder].recent[0].text == null ?
-                            null
-                            :
-                            <View style={{ width: '70%', minHeight: 100, alignSelf: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, backgroundColor: '#C8E6FA', alignItems: 'center', justifyContent: 'center' }} >
-                              {recentprotocol}
-                            </View>
-                          }
-                        </View>
+                          :
+                          <View style={{ flex: 0.9, justifyContent: 'center' }} >
+                            <View style={[{ width: '70%', backgroundColor: 'white', alignSelf: 'center', alignItems: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 20 }, this.issues[issuenumber].protocol[protocolorder].recent[0].text == null && { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }]}>
+                              <View style={{ width: '70%', marginVertical: 10, flexDirection: 'row' }}>
 
+                                {HeadIcon(this.issues[issuenumber].protocol[protocolorder].confirm, this.issues[issuenumber].protocol[protocolorder].modify)}
+
+                                <View style={{ alignSelf: 'center' }}>
+                                  <Text style={{ fontSize: 18, lineHeight: 21, color: '#447291' }}>{protocolamount}</Text>
+                                </View>
+                              </View>
+
+                              <View style={{ width: '70%', marginTop: 10 }}>
+                                <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }} >{this.issues[issuenumber].protocol[protocolorder].text}</Text>
+                              </View>
+
+                              <View style={{ flexDirection: 'row', width: '70%', marginVertical: 30, justifyContent: 'space-between' }}>
+                                <View style={{ flex: 0.2, alignItems: 'flex-end' }} >
+                                  <TouchableOpacity style={{ width: '100%', aspectRatio: 1, borderRadius: '50%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleReProtocol()} activeOpacity={0.8} >
+                                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/cancel.png')} />
+                                  </TouchableOpacity>
+                                </View>
+
+                                <View style={{ flex: 0.2, alignItems: 'flex-start' }}>
+                                  <TouchableOpacity style={{ width: '100%', aspectRatio: 1, borderRadius: '50%', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._confirmProtocol()} activeOpacity={0.8} >
+                                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/check1.png')} />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                            </View>
+                            {this.issues[issuenumber].protocol[protocolorder].recent[0].text == null ?
+                              null
+                              :
+                              <View style={{ width: '70%', paddingBottom: 10, minHeight: 80, alignSelf: 'center', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, backgroundColor: '#C8E6FA', alignItems: 'center', justifyContent: 'center' }} >
+                                {recentprotocol}
+                              </View>
+                            }
+                          </View>
+                        }
                       </View>
                       :
                       null
@@ -801,12 +989,12 @@ export default class ChatScreen extends React.Component {
                             </View>
 
                             <View style={{ width: '70%', marginVertical: 10 }}>
-                              <TextInput multiline style={{ backgroundColor: '#EDEDED', minHeight: 200, borderRadius: 10, padding: 10, color: '#447291' }} placeholder='例如：但是這樣我會擔心你晚上在外的安危.......' onFocus={() => this._onFocus()} value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} />
+                              <TextInput multiline style={{ backgroundColor: '#EDEDED', minHeight: 200, borderRadius: 10, padding: 10, color: '#447291', fontSize: 16, lineHeight: 19 }} placeholder='例如：但是這樣我會擔心你晚上在外的安危.......' onFocus={() => this._onFocus()} value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} />
                             </View>
 
                             <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'space-between', marginVertical: 10 }}>
                               <View style={{ flex: 0.4, alignItems: 'flex-end' }} >
-                                <TouchableOpacity style={{ width: '100%', aspectRatio: 2, borderRadius: '15%', backgroundColor: '#C5C5C5', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._reProtocol()} activeOpacity={0.8} >
+                                <TouchableOpacity style={{ width: '100%', aspectRatio: 2, borderRadius: '15%', backgroundColor: '#C5C5C5', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleReProtocol()} activeOpacity={0.8} >
                                   <Text style={{ fontSize: 16, lineHeight: 19, color: 'white' }}>取消</Text>
                                 </TouchableOpacity>
                               </View>
@@ -937,34 +1125,154 @@ export default class ChatScreen extends React.Component {
                         </View>
                       </View>
                       :
-                      //雙方想法頁面
-                      <View style={[styles.container, { backgroundColor: '#D0E4EC' }]}>
+                      <View style={styles.container} >
+                        {this.state.icebergdetail ?
+                          //冰山細節
+                          <View style={[styles.container, { backgroundColor: '#447291', alignContent: 'center', justifyContent: 'center' }]}>
 
-                        <Header size={this.backiconsize} type={this.issues[issuenumber].type} onPress={() => this._issueGoBack()} hintPage={() => this._toggleHintpage()} />
+                            <ScrollView style={{ width: this.screenWidth, height: this.screenHeight }} showsHorizontalScrollIndicator={false} contentContainerStyle={{ justifyContent: 'center' }} horizontal={true} bounces={false} pagingEnabled={true} onScroll={(event) => this._switchDetailpage(event)} scrollEventThrottle={16} >
 
-                        <View style={{ flex: 0.92, backgroundColor: '#4A7A99' }} >
+                              <View style={{ width: this.screenWidth, height: this.screenHeight, justifyContent: 'center' }}>
 
-                          <View style={{ flex: 0.3, width: '100%', justifyContent: 'flex-end', overflow: 'hidden', backgroundColor: '#D0E4EC' }}>
-                            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', bottom: -25 }} source={require('../assets/images/Iceberg_02.png')} />
-                          </View>
+                                <ScrollView style={{ width: '70%', marginLeft: '15%' }} bounces={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }} >
+                                  <View style={{ height: '30%' }} />
+                                  <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={require('../assets/images/f21.png')} />
+                                  <View style={{ padding: 10, marginBottom: 30 }} >
+                                    <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }}>傅紫恩好黑</Text>
+                                  </View>
+                                  <View style={{ padding: 5 }}>
+                                    <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }}>{this.issues[issuenumber].title}。這件事讓我覺得 :</Text>
+                                  </View>
+                                  <View style={{ width: '100%', padding: 10, backgroundColor: '#7EC9E0', borderRadius: 20, alignContent: 'center', marginBottom: 20 }}>
+                                    {this.issues[issuenumber].emoji.map((buffer, index) => Emojiblock(buffer, index))}
+                                  </View>
 
-                          <View style={{ flex: 0.58, width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4A7A99' }}>
-                            <ScrollView style={{ width: '80%', marginTop: 20, alignSelf: 'center' }} contentContainerStyle={{ alignSelf: 'center' }} showsVerticalScrollIndicator={false}>
-                              {block}
+                                  <View style={{ alignSelf: 'flex-start', width: '100%' }} >
+                                    <View style={{ padding: 10 }}>
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >媽媽對我的期待 :</Text>
+                                    </View>
+                                    <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].input1}</Text>
+                                    </View>
+
+                                    <View style={{ padding: 10 }}>
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >我期待我可以 :</Text>
+                                    </View>
+                                    <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].input2}</Text>
+                                    </View>
+
+                                    <View style={{ padding: 10 }}>
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >我希望媽媽能 :</Text>
+                                    </View>
+                                    <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                      <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].input3}</Text>
+                                    </View>
+                                  </View>
+
+                                </ScrollView>
+
+                              </View>
+
+                              <View style={{ width: this.screenWidth, height: this.screenHeight, justifyContent: 'center' }}>
+
+                                {this.issues[issuenumber].from == null ?
+                                  <View style={{ width: '70%', marginLeft: '15%', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ fontSize: 20, color: 'white' }} >對方還沒回覆喔!</Text>
+                                  </View>
+                                  :
+                                  <ScrollView style={{ width: '70%', marginLeft: '15%' }} bounces={false} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }} >
+                                    <View style={{ height: '30%' }} />
+                                    <Image style={{ width: 80, height: 80, resizeMode: 'contain' }} source={this.issues[issuenumber].from.head} />
+                                    <View style={{ padding: 10, marginBottom: 30 }} >
+                                      <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }}>傅紫恩好笨</Text>
+                                    </View>
+                                    <View style={{ padding: 5 }}>
+                                      <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }}>{this.issues[issuenumber].title}。這件事讓我覺得 :</Text>
+                                    </View>
+                                    <View style={{ width: '100%', padding: 10, backgroundColor: '#7EC9E0', borderRadius: 20, alignContent: 'center', marginBottom: 20 }}>
+                                      {this.issues[issuenumber].emoji.map((buffer, index) => Emojiblock(buffer, index))}
+                                    </View>
+
+                                    <View style={{ alignSelf: 'flex-start', width: '100%' }} >
+                                      <View style={{ padding: 10 }}>
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >小孩對我的期待 :</Text>
+                                      </View>
+                                      <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].from.input1}</Text>
+                                      </View>
+
+                                      <View style={{ padding: 10 }}>
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >我期待我可以 :</Text>
+                                      </View>
+                                      <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].from.input2}</Text>
+                                      </View>
+
+                                      <View style={{ padding: 10 }}>
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >我希望小孩能 :</Text>
+                                      </View>
+                                      <View style={{ backgroundColor: '#7EC9E0', width: '100%', padding: 10, borderRadius: 10 }} >
+                                        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{this.issues[issuenumber].from.input3}</Text>
+                                      </View>
+                                    </View>
+
+                                  </ScrollView>
+                                }
+
+                              </View>
+
                             </ScrollView>
-                          </View>
 
-                          <View style={{ flex: 0.12, backgroundColor: '#4A7A99', alignItems: 'flex-end', justifyContent: 'center' }}>
-                            <View style={{ marginRight: 30, flexDirection: 'row' }} >
-                              <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleThought()} activeOpacity={0.5} >
-                                <Image style={{ width: '90%', height: '90%' }} source={require('../assets/icon/add.png')} />
-                              </TouchableOpacity>
-                              <TouchableOpacity style={{ marginLeft: 20, width: 50, height: 50, borderRadius: 25 }} onPress={() => this._toggleProtocol()} activeOpacity={0.5} >
-                                <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/deal.png')} />
+                            <View style={{ position: 'absolute', flexDirection: 'row', bottom: '5%', width: 50, left: this.screenWidth / 2 - 25, justifyContent: 'space-between' }}>
+                              <View style={[{ width: 15, height: 15, borderRadius: 8, borderWidth: 1, borderColor: 'white' }, this.state.detailpage == 0 && { backgroundColor: 'white' }]} />
+
+                              <View style={[{ width: 15, height: 15, borderRadius: 8, borderWidth: 1, borderColor: 'white' }, this.state.detailpage == 1 && { backgroundColor: 'white' }]} />
+                            </View>
+
+                            <View style={{ position: 'absolute', width: 40, height: 40, left: 10, top: 30 }}>
+                              <TouchableOpacity onPress={() => this._toggleIcebergdetail()} >
+                                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/X.png')} />
                               </TouchableOpacity>
                             </View>
+
                           </View>
-                        </View>
+                          :
+                          //雙方想法頁面
+                          <View style={[styles.container, { backgroundColor: '#D0E4EC' }]}>
+
+                            <Header size={this.backiconsize} type={this.issues[issuenumber].type} onPress={() => this._issueGoBack()} hintPage={() => this._toggleHintpage()} />
+
+                            <View style={{ flex: 0.92, backgroundColor: '#4A7A99' }} >
+
+                              <View style={{ flex: 0.3, width: '100%', justifyContent: 'flex-end', overflow: 'hidden', backgroundColor: '#D0E4EC' }}>
+                                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', bottom: -25 }} source={require('../assets/images/Iceberg_02.png')} />
+                              </View>
+
+                              <View style={{ flex: 0.58, width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4A7A99' }}>
+                                <ScrollView style={{ width: '80%', marginTop: 20, alignSelf: 'center' }} contentContainerStyle={{ alignSelf: 'center' }} showsVerticalScrollIndicator={false}>
+                                  {block}
+                                </ScrollView>
+                                <View style={{ position: 'absolute', alignSelf: 'flex-end', top: -10, right: 15 }}>
+                                  <TouchableOpacity style={{ width: 60, height: 20, backgroundColor: 'white', borderRadius: '50%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleIcebergdetail()} >
+                                    <Text style={{ fontSize: 12, lineHeight: 14, color: '#447291' }}>查看冰山</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                              <View style={{ flex: 0.12, backgroundColor: '#4A7A99', alignItems: 'flex-end', justifyContent: 'center' }}>
+                                <View style={{ marginRight: 30, flexDirection: 'row' }} >
+                                  <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleThought()} activeOpacity={0.5} >
+                                    <Image style={{ width: '90%', height: '90%' }} source={require('../assets/icon/add.png')} />
+                                  </TouchableOpacity>
+                                  <TouchableOpacity style={{ marginLeft: 20, width: 50, height: 50, borderRadius: 25 }} onPress={() => this._toggleProtocol()} activeOpacity={0.5} >
+                                    <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/deal.png')} />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          </View>
+                        }
                       </View>
                     }
                   </View>
@@ -987,7 +1295,7 @@ export default class ChatScreen extends React.Component {
 
                   <View style={{ flex: 0.6, justifyContent: 'center' }}>
                     <View style={{ alignSelf: 'center' }}>
-                      <Text style={styles.leftheadertext}>媽媽</Text>
+                      <Text style={styles.leftheadertext}>{this.family.name}</Text>
                     </View>
                   </View>
 
@@ -1064,12 +1372,12 @@ export default class ChatScreen extends React.Component {
                       <View style={{ flex: 0.3 }}>
                         <View style={{ height: '60%' }}>
                           {this.speak[speakamount].type == 1 ?
-                            <Image style={styles.MonsterImgR} source={require('../assets/gif/monster02_purple.gif')} />
+                            <Image style={styles.MonsterImgR} source={this.family.monstergif} />
                             :
-                            <Image style={styles.MonsterImgR} source={require('../assets/images/monster02_purple.png')} />
+                            <Image style={styles.MonsterImgR} source={this.family.monsterpng} />
                           }
                         </View>
-                        <Text style={styles.imgtext}>媽媽</Text>
+                        <Text style={styles.imgtext}>{this.family.name}</Text>
                       </View>
                       <View style={{ flex: 0.3 }}>
                         <View style={{ height: '60%', alignItems: 'center' }}>
@@ -1122,7 +1430,7 @@ export default class ChatScreen extends React.Component {
               <Animated.View style={[styles.bottomcard, { bottom: this.state.changeheight }]} >
                 <View style={styles.bottomcardtop}>
                   <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 35, borderRadius: 15, alignItems: 'center' }}>
-                    <TextInput style={styles.bottomcardinput} placeholder='請輸入...' onChangeText={(text) => this._inputText(text)} onFocus={() => { this._taggleText(), this.setState({ openbottom: true }) }} onBlur={() => { this._taggleText(), this.setState({ openbottom: false }) }} ref={input => { this.textInput = input }} />
+                    <TextInput style={styles.bottomcardinput} placeholder='請輸入...' onChangeText={(text) => this._inputText(text)} onFocus={() => { this._taggleText(), this.setState({ openbottom: true }) }} onBlur={() => { this._taggleText(), this.setState({ openbottom: this.state.openchat ? true : false }) }} ref={input => { this.textInput = input }} />
                     <TouchableOpacity style={{ width: 25, height: 25, marginRight: 5, borderRadius: '50%' }} onPress={() => this._toggleEmoji()} >
                       <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/face.png')} />
                     </TouchableOpacity>
@@ -1195,6 +1503,22 @@ export default class ChatScreen extends React.Component {
 
 
   }
+}
+
+function Emojiblock(buffer, index) {
+  return (
+    <View key={index} style={{}}>
+      <View style={{ width: '100%', flexDirection: 'row', marginBottom: 10 }}>
+        <Slider containerStyle={{ width: '70%', height: 50, justifyContent: 'center' }} trackStyle={{ height: 15, borderRadius: '50%', backgroundColor: '#C4C4C4' }} minimumTrackTintColor={buffer.color} thumbStyle={{ width: 50, height: 50, backgroundColor: null, alignItems: 'center', justifyContent: 'center' }} thumbImage={buffer.image} minimumValue={0} disabled={true} maximumValue={5} step={1} value={buffer.value} />
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}>
+          <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{buffer.text}</Text>
+        </View>
+      </View>
+      <View style={{ marginBottom: 5 }}  >
+        <Text style={{ color: 'white', lineHeight: 19, fontSize: 16 }} >{buffer.textinput}</Text>
+      </View>
+    </View>
+  )
 }
 
 class Header extends React.Component {
@@ -1535,8 +1859,8 @@ const styles = StyleSheet.create({
   issuecard: {
     width: 190,
     height: 160,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 0,
+    marginRight: 15,
     borderRadius: 18,
     backgroundColor: 'white',
     ...Platform.select({
@@ -1544,7 +1868,7 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowRadius: 2,
       },
       android: {
         elevation: 20,
@@ -1555,7 +1879,7 @@ const styles = StyleSheet.create({
     width: 95,
     height: 160,
     marginLeft: 20,
-    marginRight: 10,
+    marginRight: 15,
     borderRadius: 18,
     backgroundColor: 'white',
     alignItems: 'center',
@@ -1565,7 +1889,7 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowRadius: 2,
       },
       android: {
         elevation: 20,

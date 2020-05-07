@@ -234,6 +234,10 @@ export default class HomeScreen extends React.Component {
     this.setState({ importent: !buffer })
   }
 
+  _setFamily = (index) => {
+    this.FireBase._setFamily(index)
+  }
+
 
   render() {
     const remind = this.remind.map((buffer, index) => {
@@ -288,21 +292,21 @@ export default class HomeScreen extends React.Component {
                   <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster01_blue.gif')} />
                   <Text style={{ color: '#818181' }} >我</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => this._gotoChatScreen()} activeOpacity={1} >
-                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster05_yellow.gif')} />
+                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(0), this._gotoChatScreen()]} activeOpacity={1} >
+                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster02_purple.gif')} />
                   <Text style={{ color: '#818181' }}>媽媽</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => this._gotoChatScreen()} activeOpacity={1} >
+                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(1), this._gotoChatScreen()]} activeOpacity={1} >
                   <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster03_pink.gif')} />
                   <Text style={{ color: '#818181' }}>爸爸</Text>
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 30 }} >
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this._gotoChatScreen()} activeOpacity={1} >
-                  <Image style={styles.MonsterImgR} resizeMode='contain' source={require('../assets/gif/monster02_green.gif')} />
+                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(2), this._gotoChatScreen()]} activeOpacity={1} >
+                  <Image style={styles.MonsterImgR} resizeMode='contain' source={require('../assets/gif/monster05_yellow.gif')} />
                   <Text style={{ color: '#818181' }}>姐姐</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this._gotoChatScreen()} activeOpacity={1} >
+                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(3), this._gotoChatScreen()]} activeOpacity={1} >
                   <Image style={styles.MonsterImgR} resizeMode='contain' source={require('../assets/gif/monster04_purple.gif')} />
                   <Text style={{ color: '#818181' }}>哥哥</Text>
                 </TouchableOpacity>

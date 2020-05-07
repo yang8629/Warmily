@@ -46,10 +46,15 @@ export default class IcebergScreen extends React.Component {
     title: '留白?',
     finish: false,
     time: '2020.4.24',
+    input1: '',
+    input2: '',
+    input3: '',
+    from: null,
     thought: [{
       from: 1,//自己
       title: '我是空白',
     }],
+    emoji: [],
     protocol: [{
       text: null,
       recent: [{
@@ -140,15 +145,11 @@ export default class IcebergScreen extends React.Component {
     value: 0,
   },]
 
-  componentDidMount = () => {
+  constructor(props) {
+    super(props)
     _keyboardWillShowSubscription = Keyboard.addListener('keyboardDidShow', (e) => this._keyboardWillShow(e));
     _keyboardWillHideSubscription = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardWillHide(e));
   }
-
-  // componentWillUnmount = () => {
-  //   // _keyboardWillShowSubscription.remove();
-  //   // _keyboardWillHideSubscription.remove();
-  // }
 
   _keyboardWillShow = (e) => {
     this.setState({ scrollable: false })
@@ -158,7 +159,21 @@ export default class IcebergScreen extends React.Component {
     this.setState({ scrollable: true })
   }
 
-  _gotoChatScreen = (buffer) => {
+  _gotoChatScreen = async (buffer) => {
+    await this.emoji.map((buffer) => {
+      if (buffer.show) {
+        if (buffer.textinput != '' || buffer.textinput != null) {
+          this.issue.emoji.push({
+            type: buffer.type,
+            text: buffer.text,
+            color: buffer.color,
+            textinput: buffer.textinput,
+            image: buffer.image,
+            value: buffer.value,
+          })
+        }
+      }
+    })
     if (buffer) {
       this.FireBase._setIssue(this.issue)
     }
@@ -331,6 +346,7 @@ export default class IcebergScreen extends React.Component {
           }).start()
         }
       }
+
       return (
         <View key={index} style={{ width: '60%' }} ref={a => buffer.ref = a} >
           <Animated.View style={{ width: '100%', height: 'auto', alignItems: 'center', transform: [{ translateX: x }] }} onLayout={() => this._emojiAnimate(x)} >
@@ -456,6 +472,7 @@ export default class IcebergScreen extends React.Component {
                     </View>
 
                   </View>
+
                   {emoji}
 
                   <View style={{ height: screenHeight * 0.04 }} />
@@ -476,7 +493,7 @@ export default class IcebergScreen extends React.Component {
                         <Text style={{ fontSize: 16, lineHeight: 21, color: 'white' }}>媽媽對我的期待</Text>
                       </View>
                       <View style={{ width: '100%', justifyContent: 'center', marginTop: 5 }}>
-                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' />
+                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' onChangeText={text => this.issue.input1 = text} />
                       </View>
                     </View>
 
@@ -485,16 +502,16 @@ export default class IcebergScreen extends React.Component {
                         <Text style={{ fontSize: 16, lineHeight: 21, color: 'white' }}>我期待我可以......</Text>
                       </View>
                       <View style={{ width: '100%', justifyContent: 'center', marginTop: 5 }}>
-                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' />
+                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' onChangeText={text => this.issue.input2 = text} />
                       </View>
                     </View>
 
                     <View style={{ marginVertical: 5 }} >
                       <View style={{ width: '100%', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 16, lineHeight: 21, color: 'white' }}> 我希望媽媽能...... </Text>
+                        <Text style={{ fontSize: 16, lineHeight: 21, color: 'white' }}>我希望媽媽能...... </Text>
                       </View>
                       <View style={{ width: '100%', justifyContent: 'center', marginTop: 5 }}>
-                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' />
+                        <TextInput multiline style={{ width: '100%', minHeight: 70, color: '#447291', borderRadius: 10, backgroundColor: 'white', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, fontSize: 16, lineHeight: 19 }} placeholder='因為...' onChangeText={text => this.issue.input3 = text} />
                       </View>
                     </View>
                   </View>

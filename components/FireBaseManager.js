@@ -13,8 +13,9 @@ const firebaseConfig = {
 export default class FireBaseManager {
     static FireBase = null;
 
-    first = true;
+    first = false;
     ready = false;
+    id = 1;     //1:小孩 2:家長
     remindamount = 6;
     data = null;
     storgeref = null;
@@ -252,6 +253,15 @@ export default class FireBaseManager {
         return this.first
     }
 
+    _getID = () => {
+        return this.id;
+    }
+
+    _setID = (id) => {
+        this.id = id
+        return this.id
+    }
+
     _getDatabase = () => {
         return firebase.firestore();
     }
@@ -362,5 +372,56 @@ export default class FireBaseManager {
         } else {
             return null
         }
+    }
+
+    family = {
+        name: '媽媽',
+        monstergif: require('../assets/gif/monster02_purple.gif'),
+        monsterpng: require('../assets/images/monster02_purple.png'),
+        monsterhead: require('../assets/images/f51.png'),
+    };
+
+    _setFamily = (buffer) => {
+        call = ''
+        gif = ''
+        png = ''
+
+        switch (buffer) {
+            case 0:
+                call = '媽媽'
+                gif = require('../assets/gif/monster02_purple.gif')
+                png = require('../assets/images/monster02_purple.png')
+                monsterhead = require('../assets/images/f51.png')
+                break;
+            case 1:
+                call = '爸爸'
+                gif = require('../assets/gif/monster03_pink.gif')
+                png = require('../assets/images/monster03_pink.png')
+                monsterhead = require('../assets/images/f12.png')
+                break;
+            case 2:
+                call = '姐姐'
+                gif = require('../assets/gif/monster05_yellow.gif')
+                png = require('../assets/images/monster05_yellow.png')
+                monsterhead = require('../assets/images/f41.png')
+                break;
+            case 3:
+                call = '哥哥'
+                gif = require('../assets/gif/monster04_purple.gif')
+                png = require('../assets/images/monster04_purple.png')
+                monsterhead = require('../assets/images/f32.png')
+                break;
+
+            default:
+                break;
+        }
+
+        this.family.name = call
+        this.family.monstergif = gif
+        this.family.monsterpng = png
+    }
+
+    _getFamily = () => {
+        return this.family
     }
 }

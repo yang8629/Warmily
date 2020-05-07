@@ -41,8 +41,8 @@ export default class LoginScreen extends React.Component {
         this.setState({ keyboard: false })
     }
 
-    _gotoSelectScreen = () => {
-        this.props.navigation.navigate('select')
+    _gotoFamilyScreen = () => {
+        this.props.navigation.navigate('family')
     }
 
     render() {
@@ -75,11 +75,11 @@ export default class LoginScreen extends React.Component {
 
                             </View>
                         </View>
-                        <View style={{ flex: 0.5, justifyContent: 'space-evenly', alignItems: 'center', paddingBottom: '5%' }}>
-                            <TouchableOpacity style={{ flex: 0.3, width: '70%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoSelectScreen()}>
+                        <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', paddingBottom: '5%' }}>
+                            <TouchableOpacity style={{ height: '30%', width: '70%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoFamilyScreen()}>
                                 <Text style={{ color: 'white', fontSize: 17 }}>登入</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flex: 0.3, width: '70%', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                            <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginTop: 15,padding:10 }}>
                                 <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }}>註冊新帳號</Text>
                             </TouchableOpacity>
                         </View>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, KeyboardAvoidingView, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View, Animated, Easing, ScrollView, Keyboard, TextInput } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { MonoText } from '../components/StyledText';
-import FireBaseManager from '../components/FireBaseManager'
+import FireBaseManager from '../components/FireBaseManager';
 import { StackActions } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
@@ -126,9 +126,7 @@ export default class SelectScreen extends React.Component {
 
   _gotoHomeScreen = () => {
     this.FireBase._setMyName(this.state.textinput)
-    this.props.navigation.dispatch(
-      StackActions.replace('homestack')
-    );
+    this.props.navigation.navigate('id')
   }
 
   _onChangeText = (text) => {

@@ -16,12 +16,20 @@ import SettingScreen from '../screens/SettingScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import SelectScreen from '../screens/SelectScreen';
 import MemoirScreen from '../screens/MemoirScreen';
+import FirstTimeScreen from '../screens/FirstTimeScreen';
+import IDScreen from '../screens/IDScreen';
+import GuideScreen from '../screens/GuideScreen';
+import FamilyScreen from '../screens/FamilyScreen';
+
+import FireBaseManager from '../components/FireBaseManager';
 
 
 const mainStack = createStackNavigator();
 const loginStack = createStackNavigator();
 const homeStack = createStackNavigator();
-const INITIAL_ROUTE_NAME = 'collect';
+const FireBase = FireBaseManager.getInstance()
+var firsttime = FireBase._getFirsttime()
+const INITIAL_ROUTE_NAME = firsttime ? 'firstscreen' : 'loginstack'
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -34,7 +42,11 @@ export default function StackNavigator({ navigation, route }) {
 
 
   return (
-    <mainStack.Navigator initialRouteName={'loginstack'} headerMode='none'>
+    <mainStack.Navigator initialRouteName={INITIAL_ROUTE_NAME} headerMode='none'>
+      <mainStack.Screen
+        name="first"
+        component={FirstTimeScreen}
+      />
       <mainStack.Screen
         name="loginstack"
         component={LoginStackNavigator}
@@ -69,7 +81,15 @@ export default function StackNavigator({ navigation, route }) {
 
 function LoginStackNavigator({ navigation, route }) {
   return (
-    <loginStack.Navigator initialRouteName={'login'} headerMode='none' >
+    <loginStack.Navigator initialRouteName={'guide'} headerMode='none' >
+      <loginStack.Screen
+        name="family"
+        component={FamilyScreen}
+      />
+      <loginStack.Screen
+        name="guide"
+        component={GuideScreen}
+      />
       <loginStack.Screen
         name="login"
         component={LoginScreen}
@@ -77,6 +97,10 @@ function LoginStackNavigator({ navigation, route }) {
       <loginStack.Screen
         name="select"
         component={SelectScreen}
+      />
+      <loginStack.Screen
+        name="id"
+        component={IDScreen}
       />
     </loginStack.Navigator>
   )
