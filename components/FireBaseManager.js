@@ -376,6 +376,7 @@ export default class FireBaseManager {
 
     family = {
         name: '媽媽',
+        id: 2,
         monstergif: require('../assets/gif/monster02_purple.gif'),
         monsterpng: require('../assets/images/monster02_purple.png'),
         monsterhead: require('../assets/images/f51.png'),
@@ -389,24 +390,28 @@ export default class FireBaseManager {
         switch (buffer) {
             case 0:
                 call = '媽媽'
+                id = 2
                 gif = require('../assets/gif/monster02_purple.gif')
                 png = require('../assets/images/monster02_purple.png')
                 monsterhead = require('../assets/images/f51.png')
                 break;
             case 1:
                 call = '爸爸'
+                id = 2
                 gif = require('../assets/gif/monster03_pink.gif')
                 png = require('../assets/images/monster03_pink.png')
                 monsterhead = require('../assets/images/f12.png')
                 break;
             case 2:
                 call = '姐姐'
+                id = 1
                 gif = require('../assets/gif/monster05_yellow.gif')
                 png = require('../assets/images/monster05_yellow.png')
                 monsterhead = require('../assets/images/f41.png')
                 break;
             case 3:
                 call = '哥哥'
+                id = 1
                 gif = require('../assets/gif/monster04_purple.gif')
                 png = require('../assets/images/monster04_purple.png')
                 monsterhead = require('../assets/images/f32.png')
@@ -417,11 +422,19 @@ export default class FireBaseManager {
         }
 
         this.family.name = call
+        this.family.id = id
         this.family.monstergif = gif
         this.family.monsterpng = png
+        this.family.monsterhead = monsterhead
     }
 
     _getFamily = () => {
         return this.family
     }
 }
+
+
+
+//git status
+//git commit -m "V"
+//git push origin master

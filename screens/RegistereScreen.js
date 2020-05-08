@@ -62,25 +62,20 @@ export default class RegistereScreen extends React.Component {
                                 null
                             }
 
-                            <View style={{ flex: 0.3, width: '70%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ flex: 0.3, width: '90%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
                                 <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入email' placeholderTextColor='#C4C4C4' ref={input => this.emailinput = input} />
                             </View>
-                            <View style={{ flex: 0.3, width: '70%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ flex: 0.3, width: '90%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
                                 <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入密碼' placeholderTextColor='#C4C4C4' secureTextEntry={true} ref={input => this.passwordinput = input} />
                             </View>
-                            <View style={{ width: '70%', marginTop: -5 }}>
-                                <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                                    <Text style={{ color: '#5CA4DA', fontSize: 12 }}>忘記密碼?</Text>
-                                </TouchableOpacity>
 
-                            </View>
                         </View>
                         <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', paddingBottom: '5%' }}>
-                            <TouchableOpacity style={{ height: '30%', width: '70%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoFamilyScreen()}>
-                                <Text style={{ color: 'white', fontSize: 17 }}>登入</Text>
+                            <TouchableOpacity style={{ height: '30%', width: '90%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoFamilyScreen()}>
+                                <Text style={{ color: 'white', fontSize: 17 }}>註冊</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginTop: 15,padding:10 }}>
-                                <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }}>註冊新帳號</Text>
+                            <TouchableOpacity style={{ height: '30%', width: '90%', borderRadius: '40%', borderWidth: 1, borderColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', marginTop: 15, padding: 10 }}>
+                                <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }}>以 Google 帳號登入</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

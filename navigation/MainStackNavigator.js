@@ -10,13 +10,14 @@ import HomeScreen from '../screens/HomeScreen';
 import ChatScreen from '../screens/ChatScreen';
 import CameraScreen from '../screens/CameraScreen';
 import LoginScreen from '../screens/LoginScreen';
+import ShareScreen from '../screens/ShareScreen';
+import RegistereScreen from '../screens/RegistereScreen';
 import IssueScreen from '../screens/IssueScreen';
 import IcebergScreen from '../screens/IcebergScreen';
 import SettingScreen from '../screens/SettingScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import SelectScreen from '../screens/SelectScreen';
 import MemoirScreen from '../screens/MemoirScreen';
-import FirstTimeScreen from '../screens/FirstTimeScreen';
 import IDScreen from '../screens/IDScreen';
 import GuideScreen from '../screens/GuideScreen';
 import FamilyScreen from '../screens/FamilyScreen';
@@ -42,11 +43,7 @@ export default function StackNavigator({ navigation, route }) {
 
 
   return (
-    <mainStack.Navigator initialRouteName={INITIAL_ROUTE_NAME} headerMode='none'>
-      <mainStack.Screen
-        name="first"
-        component={FirstTimeScreen}
-      />
+    <mainStack.Navigator initialRouteName={'loginstack'} headerMode='none'>
       <mainStack.Screen
         name="loginstack"
         component={LoginStackNavigator}
@@ -82,6 +79,14 @@ export default function StackNavigator({ navigation, route }) {
 function LoginStackNavigator({ navigation, route }) {
   return (
     <loginStack.Navigator initialRouteName={'guide'} headerMode='none' >
+      <loginStack.Screen
+        name="share"
+        component={ShareScreen}
+      />
+      <loginStack.Screen
+        name="registere"
+        component={RegistereScreen}
+      />
       <loginStack.Screen
         name="family"
         component={FamilyScreen}

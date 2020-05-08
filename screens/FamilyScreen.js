@@ -38,12 +38,16 @@ export default class FamilyScreen extends React.Component {
     this.props.navigation.navigate('select')
   }
 
+  _gotoShareScreen = () => {
+    this.props.navigation.navigate('share')
+  }
+
   _pressAdd = () => {
     if (!this.state.show) {
       Animated.timing(this.state.animate, {
         toValue: 50,
         easing: Easing.linear,
-        duration: 400,
+        duration: 300,
       }).start()
       this.setState({ show: true })
     } else {
@@ -68,7 +72,7 @@ export default class FamilyScreen extends React.Component {
 
           <View style={{ flex: 0.25, alignItems: 'center', justifyContent: 'space-evenly' }} >
 
-            <TouchableOpacity style={{ flex: 0.3, width: '80%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%' }} >
+            <TouchableOpacity style={{ flex: 0.3, width: '80%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%' }} onPress={() => this._gotoShareScreen()} >
               <Text style={{ color: 'white', fontSize: 16 }} >創建家庭群組</Text>
             </TouchableOpacity>
 

@@ -39,7 +39,11 @@ export default class GuideScreen extends React.Component {
         );
     }
 
-
+    _gotoRegistereScreen = () => {
+        this.props.navigation.dispatch(
+            StackActions.replace('registere')
+        );
+    }
 
     _onScroll = (event) => {
         x = Math.round(event.nativeEvent.contentOffset.x / this.screenWidth)
@@ -100,7 +104,7 @@ export default class GuideScreen extends React.Component {
                     </View>
 
                     <View style={{ flex: 0.8, width: '100%', alignItems: 'center' }} >
-                        <TouchableOpacity style={{ width: '80%', flex: 0.4, backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%', marginBottom: 10 }} activeOpacity={0.6} onPress={() => this._gotoLoginScreen()} >
+                        <TouchableOpacity style={{ width: '80%', flex: 0.4, backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%', marginBottom: 10 }} activeOpacity={0.6} onPress={() => this._gotoRegistereScreen()} >
                             <Text style={{ color: 'white' }} >註冊新帳號</Text>
                         </TouchableOpacity>
 

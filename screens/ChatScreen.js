@@ -15,7 +15,7 @@ import Good from '../assets/Emoji/Good.svg'
 export default class ChatScreen extends React.Component {
 
   FireBase = FireBaseManager.getInstance()
-  backiconsize = 50;
+  backiconsize = 40;
   box = 260;
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
@@ -47,115 +47,125 @@ export default class ChatScreen extends React.Component {
     type: 1,
   },]
 
-  issues = [
+  // issues = [{
+  //   type: null,
+  //   protocol: [{
+  //     text: null,
+  //     recent: [{
+  //       text: null,
+  //     }]
+  //   }],
+  //   thought: [],
+  // },]
+
+  issues = [{
+    type: '生活態度',
+    title: '沒收我的手機，限制我使用的時間',
+    finish: false,
+    time: '2020.4.4',
+    input1: '希望我不要過度沉迷於手機',
+    input2: '自行有效控管使用手機的時間',
+    input3: '多信任我一點,不要沒收我的手機',
+    from: {
+      head: require('../assets/images/f31.png'),
+      input1: '晚上12點要做什麼事情?',
+      input2: '抱佛腳',
+      input3: '因為零時抱佛腳',
+      emoji: [{
+        type: 'Happy',
+        text: '黑皮',
+        color: '#ed9c8a',
+        textinput: '因為自己不被信任',
+        image: require('../assets/Emoji/Sad.png'),
+        value: 4,
+      },],
+    },
+    emoji: [{
+      type: 'Sad',
+      text: '哭哭',
+      color: '#ed9c8a',
+      textinput: '因為自己不被信任',
+      image: require('../assets/Emoji/Sad.png'),
+      value: 4,
+    },],
+    thought: [{
+      from: 0,//媽媽
+      title: '我覺得你沒有辦法控制自己手機使用的時間......',
+    },
     {
-      type: '生活態度',
-      title: '沒收我的手機，限制我使用的時間',
-      finish: false,
-      time: '2020.4.4',
-      input1: '希望我不要過度沉迷於手機',
-      input2: '自行有效控管使用手機的時間',
-      input3: '多信任我一點,不要沒收我的手機',
-      from: {
-        head: require('../assets/images/f31.png'),
-        input1: '晚上12點要做什麼事情?',
-        input2: '抱佛腳',
-        input3: '因為零時抱佛腳',
-        emoji: [{
-          type: 'Happy',
-          text: '黑皮',
-          color: '#ed9c8a',
-          textinput: '因為自己不被信任',
-          image: require('../assets/Emoji/Sad.png'),
-          value: 4,
-        },],
-      },
-      emoji: [{
-        type: 'Sad',
-        text: '哭哭',
-        color: '#ed9c8a',
-        textinput: '因為自己不被信任',
-        image: require('../assets/Emoji/Sad.png'),
-        value: 4,
-      },],
-      thought: [{
-        from: 0,//媽媽
-        title: '我覺得你沒有辦法控制自己手機使用的時間......',
-      },
-      {
-        from: 1,//自己
-        title: '我希望你能多相信我一些，給我自己分配管理的空間。',
-      }, {
-        from: 0,//媽媽
-        title: '我覺得你沒有辦法自己控制手機使用的時間，因為每次我請你去做功課或是幫忙的時候你都沒做到，而且你最近的功課也一直在退步，所以我很不放心讓你自己控制手機。',
-      }],
-      protocol: [{
-        text: '我會自發性地寫完作業後再拿出手機',
-        confirm: true,
-        modify: false,
-        recent: [{
-          text: '阿拉花呱',
-          img: require('../assets/images/f51.png'),
-        }],
-      },
-      {
-        text: '如果發現我未完成作業就玩手機，手機才交由媽媽保管',
-        confirm: false,
-        modify: true,
-        recent: [{
-          text: '你才不會',
-          img: require('../assets/images/f51.png'),
-        }],
-      },
-      {
-        text: '傅紫恩很醜',
-        confirm: true,
-        modify: true,
-        recent: [{
-          text: null,
-        }],
-      },
-      {
-        text: '過度使用手機被警告三次以上，手機沒收一個禮拜',
-        confirm: false,
-        modify: false,
-        recent: [{
-          text: null,
-        }],
-      },
-      ],
+      from: 1,//自己
+      title: '我希望你能多相信我一些，給我自己分配管理的空間。',
     }, {
-      type: '生活態度',
-      title: '參加社團影響課業嗎?',
-      finish: false,
-      time: '2019.12.24',
-      input1: '希望我不要過度沉迷於手機',
-      input2: '自行有效控管使用手機的時間',
-      input3: '多信任我一點,不要沒收我的手機',
-      from: null,
-      emoji: [{
-        type: 'Sad',
-        text: '哭哭',
-        color: '#ed9c8a',
-        textinput: '因為自己不被信任',
-        image: require('../assets/Emoji/Sad.png'),
-        value: 4,
-      },],
-      thought: [{
-        from: 1,
-        title: '你一個禮拜應該整理一次房間',
-      }, {
-        from: 0,
-        title: '等我覺得亂就會整理了',
+      from: 0,//媽媽
+      title: '我覺得你沒有辦法自己控制手機使用的時間，因為每次我請你去做功課或是幫忙的時候你都沒做到，而且你最近的功課也一直在退步，所以我很不放心讓你自己控制手機。',
+    }],
+    protocol: [{
+      text: '我會自發性地寫完作業後再拿出手機',
+      confirm: true,
+      modify: false,
+      recent: [{
+        text: '阿拉花呱',
+        img: require('../assets/images/f51.png'),
       }],
-      protocol: [{
+    },
+    {
+      text: '如果發現我未完成作業就玩手機，手機才交由媽媽保管',
+      confirm: false,
+      modify: true,
+      recent: [{
+        text: '你才不會',
+        img: require('../assets/images/f51.png'),
+      }],
+    },
+    {
+      text: '傅紫恩很醜',
+      confirm: true,
+      modify: true,
+      recent: [{
         text: null,
-        check: true,
-        recent: [{
-          text: null
-        }],
-      },],
-    },]
+      }],
+    },
+    {
+      text: '過度使用手機被警告三次以上，手機沒收一個禮拜',
+      confirm: false,
+      modify: false,
+      recent: [{
+        text: null,
+      }],
+    },
+    ],
+  }, {
+    type: '生活態度',
+    title: '參加社團影響課業嗎?',
+    finish: false,
+    time: '2019.12.24',
+    input1: '希望我不要過度沉迷於手機',
+    input2: '自行有效控管使用手機的時間',
+    input3: '多信任我一點,不要沒收我的手機',
+    from: null,
+    emoji: [{
+      type: 'Sad',
+      text: '哭哭',
+      color: '#ed9c8a',
+      textinput: '因為自己不被信任',
+      image: require('../assets/Emoji/Sad.png'),
+      value: 4,
+    },],
+    thought: [{
+      from: 1,
+      title: '你一個禮拜應該整理一次房間',
+    }, {
+      from: 0,
+      title: '等我覺得亂就會整理了',
+    }],
+    protocol: [{
+      text: null,
+      check: true,
+      recent: [{
+        text: null
+      }],
+    },],
+  },]
 
   emoji = [{
     show: true,
@@ -238,6 +248,18 @@ export default class ChatScreen extends React.Component {
       reload: false,
       id: this.FireBase._getID()
     }
+  }
+
+  _setHint = () => {
+    order = null
+    if (this.state.id > this.family.id) {
+      order = 0
+    } else if (this.state.id == this.family.id) {
+      order = 1
+    } else {
+      order = 2
+    }
+    this.hintorder = order
   }
 
   _onFocus = () => {
@@ -539,6 +561,7 @@ export default class ChatScreen extends React.Component {
   }
 
   _toggleHintpage = () => {
+    this._setHint()
     buffer = this.state.hintPage
     this.setState({ hintPage: !buffer })
   }
@@ -608,15 +631,46 @@ export default class ChatScreen extends React.Component {
 
   render() {
     const { issuenumber, protocolorder, speakamount, id } = this.state
+    const { screenWidth, screenHeight } = this
+
     if ((a = this.FireBase._getIssue()) != null) {
-      this.issues.unshift(a)
+      if (this.issues[0].type == null) {
+        this.issues[0] = a
+      } else {
+        this.issues.unshift(a)
+      }
       this.FireBase._clearIssue()
     }
+
     const issues = this.issues.map((buffer, index) => {
-      return (
-        <Issue key={index} order={index} type={buffer.type} title={buffer.title} time={buffer.time} finish={buffer.finish} onPress={() => this._openIssue(index)} />
-      )
+      if (buffer.type == null) {
+        return (
+          <View key={index} style={{ backgroundColor: 'white', width: screenWidth * 0.9, marginLeft: screenWidth * 0.05, height: '55%', borderRadius: '50%', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+            <View style={{ flex: 0.3, alignItems: 'flex-end' }} >
+              <View style={{ height: '70%', aspectRatio: 1, backgroundColor: '#F5F5F5', borderRadius: '50%', alignItems: 'center', justifyContent: 'center' }}>
+                <Image style={{ height: '80%', aspectRatio: 1, resizeMode: 'contain', }} source={require('../assets/icon/iceberg_icon.png')} />
+              </View>
+            </View>
+            <View style={{ flex: 0.7, alignItems: 'center' }} >
+              <View style={{ marginBottom: 4 }} >
+                <Text style={{ fontSize: 16, lineHeight: 25, color: '#9D9C9B', textAlign: 'center' }} >有什麼想法想跟對方分享的嗎?{'\n'}有什麼說不出口的話嗎?</Text>
+              </View>
+              <View>
+                <TouchableOpacity style={{ flexDirection: 'row', backgroundColor: '#89C4C4', borderRadius: '10%', alignItems: 'center', justifyContent: 'center', padding: 5 }} onPress={() => this._gotoIcebergScreen()} >
+                  <Image style={{ width: 30, aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/edit.png')} />
+                  <Text style={{ fontSize: 16, paddingHorizontal: 5, lineHeight: 19, color: 'white' }} >深入對話</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )
+      } else {
+        return (
+          <Issue key={index} order={index} type={buffer.type} title={buffer.title} time={buffer.time} finish={buffer.finish} onPress={() => this._openIssue(index)} />
+        )
+      }
     })
+
     const speak = this.speak.map((buffer, index) => {
       if (buffer.type == 1) {
         return (
@@ -664,28 +718,30 @@ export default class ChatScreen extends React.Component {
     const protocolamount = this._getOrder(this.issues[issuenumber].protocol.length);
 
     const block = this.issues[issuenumber].thought.map((buffer, index) => {
-      if (buffer.from == 0) {
-        return (
-          <View key={index} style={{ flexDirection: 'row', width: this.screenWidth * 0.8, minHeight: 80, borderRadius: '10%', backgroundColor: '#609DB8' }} activeOpacity={1} >
-            <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
-              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../assets/images/f51.png')} />
+      if (buffer != null) {
+        if (buffer.from == 0) {
+          return (
+            <View key={index} style={{ flexDirection: 'row', width: this.screenWidth * 0.8, minHeight: 80, borderRadius: '10%', backgroundColor: '#609DB8' }} activeOpacity={1} >
+              <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
+                <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../assets/images/f51.png')} />
+              </View>
+              <View style={{ flex: 0.8, justifyContent: 'center', paddingTop: 10, paddingRight: 10, paddingBottom: 10 }}>
+                <Text style={{ color: 'white', fontSize: 16, lineHeight: 23 }}>{buffer.title}</Text>
+              </View>
             </View>
-            <View style={{ flex: 0.8, justifyContent: 'center', paddingTop: 10, paddingRight: 10, paddingBottom: 10 }}>
-              <Text style={{ color: 'white', fontSize: 16, lineHeight: 23 }}>{buffer.title}</Text>
+          )
+        } else {
+          return (
+            <View key={index} style={{ flexDirection: 'row', width: this.screenWidth * 0.8, minHeight: 80, borderRadius: '10%', backgroundColor: '#7EC9E0' }} activeOpacity={1} >
+              <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
+                <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../assets/images/f31.png')} />
+              </View>
+              <View style={{ flex: 0.8, justifyContent: 'center', paddingTop: 10, paddingRight: 10, paddingBottom: 10 }}>
+                <Text style={{ color: 'white', fontSize: 16, lineHeight: 23 }}>{buffer.title}</Text>
+              </View>
             </View>
-          </View>
-        )
-      } else {
-        return (
-          <View key={index} style={{ flexDirection: 'row', width: this.screenWidth * 0.8, minHeight: 80, borderRadius: '10%', backgroundColor: '#7EC9E0' }} activeOpacity={1} >
-            <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
-              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../assets/images/f31.png')} />
-            </View>
-            <View style={{ flex: 0.8, justifyContent: 'center', paddingTop: 10, paddingRight: 10, paddingBottom: 10 }}>
-              <Text style={{ color: 'white', fontSize: 16, lineHeight: 23 }}>{buffer.title}</Text>
-            </View>
-          </View>
-        )
+          )
+        }
       }
     })
 
@@ -728,7 +784,7 @@ export default class ChatScreen extends React.Component {
                           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>1</Text>
                         </View>
                         <View style={{ flex: 0.84 }} >
-                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>嘗試跟家人說你的感受與想法</Text>
+                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][1]}</Text>
                         </View>
                       </View>
 
@@ -737,7 +793,7 @@ export default class ChatScreen extends React.Component {
                           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>2</Text>
                         </View>
                         <View style={{ flex: 0.84 }} >
-                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>試著尋找能同時滿足雙方期待解決辦法</Text>
+                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][2]}</Text>
                         </View>
                       </View>
 
@@ -746,7 +802,7 @@ export default class ChatScreen extends React.Component {
                           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>3</Text>
                         </View>
                         <View style={{ flex: 0.84 }} >
-                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>以我為出發點敘述，少用你指責</Text>
+                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][3]}</Text>
                         </View>
                       </View>
 
@@ -755,7 +811,7 @@ export default class ChatScreen extends React.Component {
                           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>4</Text>
                         </View>
                         <View style={{ flex: 0.84 }} >
-                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>語氣不要太過強烈，明確表達自己需求</Text>
+                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][4]}</Text>
                         </View>
                       </View>
 
@@ -764,7 +820,7 @@ export default class ChatScreen extends React.Component {
                           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>5</Text>
                         </View>
                         <View style={{ flex: 0.84 }} >
-                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>適時的向他們表達感謝，不要視一切為理所當然</Text>
+                          <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][5]}</Text>
                         </View>
                       </View>
                     </View>
@@ -778,7 +834,15 @@ export default class ChatScreen extends React.Component {
                     <View style={{ flex: 0.92, alignItems: 'center' }}>
 
                       <View style={{ flex: 0.3, width: '100%', justifyContent: 'flex-end', overflow: 'hidden', backgroundColor: '#D0E4EC' }}>
-                        <Image style={{ width: '100%', height: '100%', resizeMode: 'contain', bottom: -25 }} source={require('../assets/images/Iceberg_02.png')} />
+                        <Image style={{ position: 'absolute', width: '100%', height: '100%', resizeMode: 'contain', bottom: -25 }} source={require('../assets/images/Iceberg_02.png')} />
+
+                        <View style={{ backgroundColor: '#FAC75E', width: '65%', alignSelf: 'center', paddingVertical: 20, paddingHorizontal: 30, borderRadius: '50%', left: 40, bottom: -50, }} >
+                          <Text style={{ color: 'white', fontSize: 16, lineHeight: 21 }} >試著讓孩子理解你的顧慮，但不要引導往自己期望的方向或直接給予解決辦法，這樣才能更增添他的想法跟創造力喔。</Text>
+                        </View>
+                        <Image style={{ height: '45%', resizeMode: 'contain', bottom: 5 }} source={require('../assets/images/pg_Right.png')} />
+
+                        <View style={{ position: 'absolute', left: '22%', bottom: '40%', width: 0, height: 0, backgroundColor: 'transparent', borderStyle: 'solid', borderLeftWidth: 0, borderRightWidth: 20, borderBottomWidth: 40, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#FAC75E', transform: [{ rotate: '-120deg' }] }} />
+
                       </View>
 
                       <View style={{ flex: 0.5, width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4A7A99' }}>
@@ -809,7 +873,8 @@ export default class ChatScreen extends React.Component {
                   <View style={[styles.container, { backgroundColor: '#4A7A99' }]}>
 
                     <View style={[styles.header, { backgroundColor: '#4A7A99' }]} >
-                      <View style={{ flex: 0.2 }}>
+
+                      <View style={{ flex: 0.2, justifyContent: 'center' }}>
                         <TouchableOpacity style={{ width: 30, marginLeft: 15, justifyContent: 'center' }} activeOpacity={1} onPress={() => this._toggleProtocol()} >
                           <Icon name='angle-left' size={this.backiconsize} color='#FFFFFF' type='font-awesome' />
                         </TouchableOpacity>
@@ -836,7 +901,8 @@ export default class ChatScreen extends React.Component {
                       </TouchableOpacity>
                     </View>
 
-                    {this.state.protocoladd ?//新增條例頁面
+                    {this.state.protocoladd ?
+                      //新增條例頁面
                       <View style={{ position: 'absolute', width: '100%', height: '100%', justifyContent: 'center', backgroundColor: '#4A7A99' }} >
 
                         {this.state.onFocus ?
@@ -845,8 +911,8 @@ export default class ChatScreen extends React.Component {
                           null
                         }
 
-                        <View style={{ width: '80%', height: '60%', marginTop: '20%', backgroundColor: 'white', alignSelf: 'center', borderRadius: 20, paddingHorizontal: 30, paddingVertical: 30 }}>
-                          <View style={{ marginHorizontal: 10, marginVertical: 10, flexDirection: 'row' }}>
+                        <View style={{ width: '80%', height: '60%', top: '5%', backgroundColor: 'white', alignSelf: 'center', borderRadius: 20, paddingHorizontal: 30, paddingVertical: 30 }}>
+                          <View style={{ flex: 0.2, marginHorizontal: 10, marginVertical: 10, flexDirection: 'row', alignItems: 'center' }}>
                             <View style={[styles.headbox, { width: 40, height: 40, borderRadius: '50%', alignItems: 'center', justifyContent: 'center' }]} >
                               <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/circle.png')} />
                             </View>
@@ -854,10 +920,10 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ fontSize: 18, lineHeight: 21, color: '#447291' }}>{protocolamount}</Text>
                             </View>
                           </View>
-                          <View style={{ justifyContent: 'space-between' }} >
-                            <TextInput multiline style={{ alignSelf: 'center', width: '100%', height: '70%', fontSize: 16, lineHeight: 19, color: '#447291', backgroundColor: '#EDEDED', borderRadius: 10, paddingHorizontal: 10, paddingTop: 20, paddingBottom: 20 }} placeholder='請輸入...' value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} ref={input => { this.InputProtocol = input }} onFocus={() => this._onFocus()} />
+                          <View style={{ flex: 0.8, justifyContent: 'space-between' }} >
+                            <TextInput multiline style={{ flex: 0.7, alignSelf: 'center', width: '100%', fontSize: 16, lineHeight: 19, color: '#447291', backgroundColor: '#EDEDED', borderRadius: 10, paddingHorizontal: 10, paddingTop: 20, paddingBottom: 20 }} placeholder='請輸入...' value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} ref={input => { this.InputProtocol = input }} onFocus={() => this._onFocus()} />
 
-                            <View style={{ flexDirection: 'row', width: '100%', height: '22%', justifyContent: 'space-between' }}>
+                            <View style={{ flex: 0.22, flexDirection: 'row', width: '100%', justifyContent: 'space-between', }}>
                               <TouchableOpacity style={{ flex: 0.35, height: '100%', borderRadius: 20, backgroundColor: '#C5C5C5', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleProtocolAdd()} activeOpacity={0.8} >
                                 <Text style={{ fontSize: 18, lineHeight: 21, color: '#F2F2F2' }}>取消</Text>
                               </TouchableOpacity>
@@ -873,11 +939,12 @@ export default class ChatScreen extends React.Component {
                       : null
                     }
 
-                    {this.state.checkprotocol ?//確認條例頁面
+                    {this.state.checkprotocol ?
+                      //確認條例頁面
                       <View style={{ position: 'absolute', width: '100%', height: '100%', justifyContent: 'center', backgroundColor: '#4A7A99' }} >
 
                         <View style={{ flex: 0.1, marginTop: '5%', flexDirection: 'row', backgroundColor: '#4A7A99' }} >
-                          <View style={{ flex: 0.2 }}>
+                          <View style={{ flex: 0.2, justifyContent: 'center' }}>
                             <TouchableOpacity style={{ width: 30, marginLeft: 15, justifyContent: 'center' }} activeOpacity={1} onPress={() => this._checkProtocol(1)} >
                               <Icon name='angle-left' size={this.backiconsize} color='#FFFFFF' type='font-awesome' />
                             </TouchableOpacity>
@@ -890,6 +957,7 @@ export default class ChatScreen extends React.Component {
                         {id == 1 ?
                           <View style={{ flex: 0.9, justifyContent: 'center' }} >
                             <View style={[{ width: '70%', backgroundColor: 'white', alignSelf: 'center', alignItems: 'center', borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 20 }, this.issues[issuenumber].protocol[protocolorder].recent[0].text == null && { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }]}>
+
                               <View style={{ width: '70%', marginVertical: 10, flexDirection: 'row' }}>
 
                                 {HeadIcon(this.issues[issuenumber].protocol[protocolorder].confirm, this.issues[issuenumber].protocol[protocolorder].modify)}
@@ -971,11 +1039,29 @@ export default class ChatScreen extends React.Component {
                       null
                     }
 
-                    {this.state.reprotocol ?//重提條例頁面
+                    {this.state.reprotocol ?
+                      //重提條例頁面
                       <View style={{ position: 'absolute', width: '100%', height: '100%', justifyContent: 'center', backgroundColor: '#4A7A99' }} >
                         <View style={{ flex: 0.1 }} />
 
                         <View style={{ flex: 0.9, justifyContent: 'center' }} >
+
+                          <View style={{ position: 'absolute', justifyContent: 'flex-end', width: '100%', height: '22%', top: '-1%' }} >
+
+                            <View style={{ backgroundColor: '#FAC75E', right: 30, top: 40, paddingVertical: 15, paddingHorizontal: 25, width: '60%', borderRadius: '60%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }} >
+                              {id == 1 ?
+                                <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }} >試著理解父母的顧慮，盡量想出能符合兩方需求的辦法。</Text>
+                                :
+                                <Text style={{ color: 'white', fontSize: 16, lineHeight: 19 }} >試著讓孩子理解你的顧慮，但不要引導往自己期望的方向或直接給予解決辦法，這樣才能更增添他的想發跟創造力喔。</Text>
+                              }
+                            </View>
+
+                            <Image style={{ resizeMode: 'contain', right: '9%', height: '50%', alignSelf: 'flex-end', transform: [{ rotate: '-15deg' }] }} source={require('../assets/images/pg_Left.png')} />
+
+                            <View style={{ position: 'absolute', right: '30%', bottom: '20%', width: 0, height: 0, backgroundColor: 'transparent', borderStyle: 'solid', borderLeftWidth: 0, borderRightWidth: 20, borderBottomWidth: 40, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#FAC75E', zIndex: -1, transform: [{ rotate: '130deg' }] }} />
+
+                          </View>
+
                           <View style={{ width: '70%', minHeight: '50%', backgroundColor: 'white', alignSelf: 'center', alignItems: 'center', borderRadius: 20, paddingVertical: 20 }}>
                             <View style={{ width: '70%', marginVertical: 10, flexDirection: 'row' }}>
                               {HeadIcon(this.issues[issuenumber].protocol[protocolorder].confirm, this.issues[issuenumber].protocol[protocolorder].modify)}
@@ -989,7 +1075,7 @@ export default class ChatScreen extends React.Component {
                             </View>
 
                             <View style={{ width: '70%', marginVertical: 10 }}>
-                              <TextInput multiline style={{ backgroundColor: '#EDEDED', minHeight: 200, borderRadius: 10, padding: 10, color: '#447291', fontSize: 16, lineHeight: 19 }} placeholder='例如：但是這樣我會擔心你晚上在外的安危.......' onFocus={() => this._onFocus()} value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} />
+                              <TextInput multiline style={{ backgroundColor: '#EDEDED', minHeight: 150, borderRadius: 10, padding: 10, color: '#447291', fontSize: 16, lineHeight: 19 }} placeholder='例如：但是這樣我會擔心你晚上在外的安危.......' onFocus={() => this._onFocus()} value={this.state.inputtext} onChangeText={(text) => this._inputText(text)} />
                             </View>
 
                             <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'space-between', marginVertical: 10 }}>
@@ -1083,7 +1169,7 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>1</Text>
                             </View>
                             <View style={{ flex: 0.84 }} >
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>嘗試跟家人說你的感受與想法</Text>
+                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][1]}</Text>
                             </View>
                           </View>
 
@@ -1092,7 +1178,7 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>2</Text>
                             </View>
                             <View style={{ flex: 0.84 }} >
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>試著尋找能同時滿足雙方期待解決辦法</Text>
+                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][2]}</Text>
                             </View>
                           </View>
 
@@ -1101,7 +1187,7 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>3</Text>
                             </View>
                             <View style={{ flex: 0.84 }} >
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>以我為出發點敘述，少用你指責</Text>
+                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][3]}</Text>
                             </View>
                           </View>
 
@@ -1110,7 +1196,7 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>4</Text>
                             </View>
                             <View style={{ flex: 0.84 }} >
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>語氣不要太過強烈，明確表達自己需求</Text>
+                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][4]}</Text>
                             </View>
                           </View>
 
@@ -1119,7 +1205,7 @@ export default class ChatScreen extends React.Component {
                               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>5</Text>
                             </View>
                             <View style={{ flex: 0.84 }} >
-                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>適時的向他們表達感謝，不要視一切為理所當然</Text>
+                              <Text style={{ fontSize: 16, lineHeight: 19, color: '#447291' }}>{this.hints[this.hintorder][5]}</Text>
                             </View>
                           </View>
                         </View>
@@ -1285,113 +1371,126 @@ export default class ChatScreen extends React.Component {
           <View style={[styles.container, { backgroundColor: '#F4EDE9' }]}>
             <View style={[styles.container, { backgroundColor: 'rgba(123, 121, 121, 0.05)' }]}>
               <View style={styles.container} >
-                <View style={[styles.header, { justifyContent: 'center' }]} >
+                <KeyboardAvoidingView behavior='position' >
 
-                  <View style={{ flex: 0.2 }} >
-                    <TouchableOpacity style={{ width: 30, marginLeft: 15, justifyContent: 'center' }} activeOpacity={1} onPress={() => this._gotoHomeScreem()} >
-                      <Icon name='angle-left' size={50} color='#6E6E6E' type='font-awesome' />
-                    </TouchableOpacity>
-                  </View>
+                  <View style={{ width: this.screenWidth, height: screenHeight }}>
+                    <View style={[styles.header, { justifyContent: 'center' }]} >
 
-                  <View style={{ flex: 0.6, justifyContent: 'center' }}>
-                    <View style={{ alignSelf: 'center' }}>
-                      <Text style={styles.leftheadertext}>{this.family.name}</Text>
-                    </View>
-                  </View>
-
-                  <View style={{ flex: 0.2 }} >
-                  </View>
-
-                </View>
-
-
-                <View style={[styles.chatcontainer, { backgroundColor: '#F4EDE9' }]} >
-                  <View style={{ flex: 0.45 }} >
-                    <View style={{ flex: 0.2, width: '90%', alignSelf: 'center', justifyContent: 'center' }}>
-                      <View style={{ flexDirection: 'row', height: '100%', alignItems: 'center' }} >
-                        <View style={{ height: '100%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center' }}>
-                          <Image style={{ height: '80%', aspectRatio: 1, resizeMode: 'contain', }} source={require('../assets/icon/iceberg_icon.png')} />
-                        </View>
-                        <View>
-                          <Text style={{ fontWeight: 'bold', lineHeight: 21, fontSize: 18, color: '#818181' }}>冰山溝通</Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={{ flex: 0.8 }}>
-                      <ScrollView style={styles.chatissue} horizontal={true} showsHorizontalScrollIndicator={false} ref={scroll => this.issuesScroll = scroll} >
-                        <TouchableOpacity style={styles.plusissuecard} onPress={() => this._gotoIcebergScreen()} activeOpacity={0.6} >
-                          <Icon name='plus-circle' type='font-awesome' size={60} color='#CCCCCC' />
+                      <View style={{ flex: 0.2, justifyContent: 'center' }} >
+                        <TouchableOpacity style={{ width: 30, marginLeft: 15 }} activeOpacity={1} onPress={() => this._gotoHomeScreem()} >
+                          <Icon name='angle-left' size={this.backiconsize} color='#6E6E6E' type='font-awesome' />
                         </TouchableOpacity>
-                        {issues}
-                      </ScrollView>
+                      </View>
+
+                      <View style={{ flex: 0.6, justifyContent: 'center' }}>
+                        <View style={{ alignSelf: 'center' }}>
+                          <Text style={styles.leftheadertext}>{this.family.name}</Text>
+                        </View>
+                      </View>
+
+                      <View style={{ flex: 0.2 }} >
+                      </View>
+
                     </View>
+
+
+                    <View style={[styles.chatcontainer, { backgroundColor: '#F4EDE9' }]} >
+                      <View style={{ flex: 0.45 }} >
+                        <View style={{ flex: 0.2, width: '90%', alignSelf: 'center', justifyContent: 'center' }}>
+                          <View style={{ flexDirection: 'row', height: '100%', alignItems: 'center' }} >
+                            <View style={{ height: '100%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center' }}>
+                              <Image style={{ height: '80%', aspectRatio: 1, resizeMode: 'contain', }} source={require('../assets/icon/iceberg_icon.png')} />
+                            </View>
+                            <View>
+                              <Text style={{ fontWeight: 'bold', lineHeight: 21, fontSize: 18, color: '#818181' }}>冰山溝通</Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={{ flex: 0.8 }}>
+                          <ScrollView style={styles.chatissue} horizontal={true} showsHorizontalScrollIndicator={false} ref={scroll => this.issuesScroll = scroll} >
+                            {this.issues[0].type == null ?
+                              null
+                              :
+                              <TouchableOpacity style={styles.plusissuecard} onPress={() => this._gotoIcebergScreen()} activeOpacity={0.6} >
+                                <Icon name='plus-circle' type='font-awesome' size={60} color='#CCCCCC' />
+                              </TouchableOpacity>
+                            }
+                            {issues}
+                          </ScrollView>
+                        </View>
+                      </View>
+
+                      <View style={styles.chatcontent}>
+
+                        {this.speak[speakamount].type == 0 ?
+                          <View style={styles.chattop}>
+                            <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
+                              <View style={styles.triangle} />
+                              <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
+                              </View>
+                            </View>
+                          </View>
+                          :
+                          null
+                        }
+
+                        {this.speak[speakamount].type == 1 ?
+                          <View style={styles.chattop}>
+                            <View style={{ alignSelf: 'center', justifyContent: 'flex-end', left: '-5%' }}>
+                              <View style={styles.triangleL} />
+                              <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
+                              </View>
+                            </View>
+                          </View>
+                          :
+                          null
+                        }
+
+                        {this.speak[speakamount].type == 2 ?
+                          <View style={styles.chattop}>
+                            <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
+                              <View style={styles.triangle} />
+                              <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                <Emoji order={this.speak[speakamount].order} />
+                              </View>
+                            </View>
+                          </View>
+                          :
+                          null
+                        }
+
+                        <View style={styles.chatimage}>
+                          <View style={{ flex: 0.3 }}>
+                            <View style={{ height: '60%' }}>
+                              {this.speak[speakamount].type == 1 ?
+                                <Image style={styles.MonsterImgR} source={this.family.monstergif} />
+                                :
+                                <Image style={styles.MonsterImgR} source={this.family.monsterpng} />
+                              }
+                            </View>
+                            <Text style={styles.imgtext}>{this.family.name}</Text>
+                          </View>
+                          <View style={{ flex: 0.3 }}>
+                            <View style={{ height: '60%', alignItems: 'center' }}>
+                              {this.speak[speakamount].type == 0 || this.speak[speakamount].type == 2 ?
+                                <Image style={{ width: 160, height: 160 }} source={require('../assets/gif/monster01_blue.gif')} />
+                                :
+                                <Image style={styles.MonsterImgL} source={require('../assets/images/monster01_blue.png')} />
+                              }
+                            </View>
+                            <Text style={styles.imgtext}>我</Text>
+                          </View>
+                        </View>
+
+                        <View style={{ position: 'absolute', width: '100%', height: '40%', bottom: 0, backgroundColor: '#E4DBD5', zIndex: -1 }} />
+                      </View>
+                    </View>
+
                   </View>
 
-                  <View style={styles.chatcontent}>
-
-                    {this.speak[speakamount].type == 0 ?
-                      <View style={styles.chattop}>
-                        <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
-                          <View style={styles.triangle} />
-                          <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
-                            <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
-                          </View>
-                        </View>
-                      </View>
-                      :
-                      null
-                    }
-
-                    {this.speak[speakamount].type == 1 ?
-                      <View style={styles.chattop}>
-                        <View style={{ alignSelf: 'center', justifyContent: 'flex-end', left: '-5%' }}>
-                          <View style={styles.triangleL} />
-                          <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
-                            <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
-                          </View>
-                        </View>
-                      </View>
-                      :
-                      null
-                    }
-
-                    {this.speak[speakamount].type == 2 ?
-                      <View style={styles.chattop}>
-                        <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
-                          <View style={styles.triangle} />
-                          <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
-                            <Emoji order={this.speak[speakamount].order} />
-                          </View>
-                        </View>
-                      </View>
-                      :
-                      null
-                    }
-
-                    <View style={styles.chatimage}>
-                      <View style={{ flex: 0.3 }}>
-                        <View style={{ height: '60%' }}>
-                          {this.speak[speakamount].type == 1 ?
-                            <Image style={styles.MonsterImgR} source={this.family.monstergif} />
-                            :
-                            <Image style={styles.MonsterImgR} source={this.family.monsterpng} />
-                          }
-                        </View>
-                        <Text style={styles.imgtext}>{this.family.name}</Text>
-                      </View>
-                      <View style={{ flex: 0.3 }}>
-                        <View style={{ height: '60%', alignItems: 'center' }}>
-                          {this.speak[speakamount].type == 0 || this.speak[speakamount].type == 2 ?
-                            <Image style={{ width: 160, height: 160 }} source={require('../assets/gif/monster01_blue.gif')} />
-                            :
-                            <Image style={styles.MonsterImgL} source={require('../assets/images/monster01_blue.png')} />
-                          }
-                        </View>
-                        <Text style={styles.imgtext}>我</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
+                </KeyboardAvoidingView>
               </View>
 
               {
@@ -1500,9 +1599,27 @@ export default class ChatScreen extends React.Component {
         }
       </View >
     );
-
-
   }
+
+  hints = [{
+    1: '避免使用為什麼，改為關心',
+    2: '引導孩子自行想出解決辦法，多問問還能怎麼辦呢',
+    3: '以我為出發點敘述，少用你指責',
+    4: '和孩子的人生劃清界線，不要寄託施壓在孩子身上',
+    5: '對於他們的傾訴多給予鼓勵，並讓他們知道不要怕，我會一直陪著你。',
+  }, {
+    1: '嘗試跟家人說你的感受與想法 在乎自己、情境、對方三要素',
+    2: '試著尋找能同時滿足雙方期待解決辦法',
+    3: '以我為出發點敘述，少用你指責',
+    4: '語氣不要太過強烈，明確表達自己需求',
+    5: '不使用攻擊或武裝的方式，盡可能保持心態開放，「互相」表達和討論。'
+  }, {
+    1: '嘗試跟家人說你的感受與想法 在乎自己、情境、對方三要素',
+    2: '試著尋找能同時滿足雙方期待解決辦法',
+    3: '以我為出發點敘述，少用你指責',
+    4: '語氣不要太過強烈，明確表達自己需求',
+    5: '適時的向他們表達感謝，不要視一切為理所當然',
+  }]
 }
 
 function Emojiblock(buffer, index) {
@@ -1525,8 +1642,8 @@ class Header extends React.Component {
   render() {
     return (
       <View style={styles.header} >
-        <View style={{ flex: 0.2 }}>
-          <TouchableOpacity style={{ width: 30, marginLeft: 15, justifyContent: 'center' }} activeOpacity={1} onPress={this.props.onPress} >
+        <View style={{ flex: 0.2, justifyContent: 'center' }}>
+          <TouchableOpacity style={{ width: 30, marginLeft: 15, }} activeOpacity={1} onPress={this.props.onPress} >
             <Icon name='angle-left' size={this.props.size} color='#6E6E6E' type='font-awesome' />
           </TouchableOpacity>
         </View>
@@ -1900,7 +2017,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
   chattop: {
-    flex: 0.2,
+    flex: 0.3,
     justifyContent: 'flex-end',
   },
   chatbubble: {
@@ -1952,7 +2069,7 @@ const styles = StyleSheet.create({
     ]
   },
   chatimage: {
-    flex: 0.8,
+    flex: 0.7,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-around',
@@ -1966,15 +2083,15 @@ const styles = StyleSheet.create({
     height: 141,
   },
   imgtext: {
-    fontSize: 18,
-    lineHeight: 21,
+    fontSize: 15,
+    lineHeight: 18,
     color: '#6E6E6E',
     alignSelf: 'center',
   },
   bottomcard: {
     position: 'absolute',
     width: '100%',
-    height: 375,
+    height: 360,
     backgroundColor: '#FAC75E',
     borderRadius: 30,
   },
@@ -1982,7 +2099,7 @@ const styles = StyleSheet.create({
     height: 65,
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   bottomcardinput: {
     width: 250,
