@@ -51,32 +51,32 @@ export default class ShareScreen extends React.Component {
                     <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'space-evenly', alignItems: 'center' }} >
                         <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                             <View style={{ marginBottom: 15, width: 60, aspectRatio: 1, backgroundColor: '#C4C4C4', borderRadius: '10%' }} >
-
+                                <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/link1.png')} />
                             </View>
                             <Text style={{ color: '#6E6E6E' }} >複製連結</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                             <View style={{ marginBottom: 15, width: 60, aspectRatio: 1, backgroundColor: '#C4C4C4', borderRadius: '10%' }} >
-
+                                <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/link2.png')} />
                             </View>
                             <Text style={{ color: '#6E6E6E' }} >LINE</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                             <View style={{ marginBottom: 15, width: 60, aspectRatio: 1, backgroundColor: '#C4C4C4', borderRadius: '10%' }} >
-
+                                <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/link3.png')} />
                             </View>
                             <Text style={{ color: '#6E6E6E' }} >EMAIL</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }} >
                             <View style={{ marginBottom: 15, width: 60, aspectRatio: 1, backgroundColor: '#C4C4C4', borderRadius: '10%' }} >
-
+                                <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/link4.png')} />
                             </View>
                             <Text style={{ color: '#6E6E6E' }} >其他</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ flex: 0.2, width: '100%', alignItems: 'center', justifyContent: 'center' }} >
-                    <TouchableOpacity style={{ width: '70%', height: '40%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%' }} onPress={() => this._gotoSelectScreen()} activeOpacity={0.8} >
+                    <TouchableOpacity style={[{ width: '70%', height: '40%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', borderRadius: '40%' }, styles.shadow]} onPress={() => this._gotoSelectScreen()} activeOpacity={0.8} >
                         <Text style={{ color: 'white' }} >下一步</Text>
                     </TouchableOpacity>
                 </View>
@@ -93,65 +93,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#F4EDE9',
         alignItems: 'center',
     },
-    Logo: {
-        width: 10,
-        flex: 0.4,
-        justifyContent: 'center',
-        alignSelf: 'center',
-    },
-    Eye1: {
-        width: 175,
-        height: 175,
-        left: -87.5,
-        top: 10,
-        borderRadius: 87.5,
-        backgroundColor: '#DCDCDC',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    Eye2: {
-        width: 118,
-        height: 118,
-        borderRadius: 59,
-        backgroundColor: '#3C3C3C',
-        alignItems: 'center',
-    },
-    Eye3: {
-        width: 34,
-        height: 34,
-        top: 9,
-        borderRadius: 17,
-        backgroundColor: '#FFFFFF',
-    },
-    MainArea: {
-        flex: 0.4,
-    },
-    InputArea: {
-        flex: 0.5,
-        width: 10,
-    },
-    Input: {
-        width: 250,
-        height: 45,
-        left: -125,
-        fontSize: 18,
-        borderWidth: 2,
-        borderRadius: 20,
-        borderColor: '#6F6F6F',
-    },
-    BtnArea: {
-        flex: 0.5,
-        width: 10,
-    },
-    Btn: {
-        width: 250,
-        height: 45,
-        left: -125,
-        marginTop: 20,
-        backgroundColor: '#6F6F6F',
-        borderRadius: 20,
-    },
-    BottomArea: {
-        flex: 0.2,
+    shadow: {
+        ...Platform.select({
+            ios: {
+                shadowColor: 'black',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 20,
+            },
+        }),
     },
 })

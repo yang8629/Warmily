@@ -165,8 +165,8 @@ class Header extends React.Component {
           <View style={{ height: '70%', aspectRatio: 1, }} >
             <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/box.png')} />
           </View>
-          <View style={{ width: '60%', height: '35%', borderTopRightRadius: '50%', borderBottomRightRadius: '50%', backgroundColor: '#C4C4C4', overflow: 'hidden' }}>
-            <Animated.View style={{ position: 'absolute', left: this.props.progress, width: '100%', height: '100%', borderTopRightRadius: '50%', borderBottomRightRadius: '50%', backgroundColor: '#E3E3E3' }} >
+          <View style={{ width: '60%', height: '35%', borderTopRightRadius: '50%', borderBottomRightRadius: '50%', backgroundColor: '#E3E3E3', overflow: 'hidden' }}>
+            <Animated.View style={{ position: 'absolute', left: this.props.progress, width: '100%', height: '100%', borderTopRightRadius: '50%', borderBottomRightRadius: '50%', backgroundColor: '#F8CC73' }} >
 
             </Animated.View>
           </View>

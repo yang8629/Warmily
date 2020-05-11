@@ -12,7 +12,6 @@ export default class SelectScreen extends React.Component {
     header: null,
   };
 
-  FireBase = FireBaseManager.getInstance();
 
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
@@ -83,6 +82,7 @@ export default class SelectScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    this.FireBase = FireBaseManager.getInstance();
   }
 
   componentDidMount = () => {
@@ -126,6 +126,7 @@ export default class SelectScreen extends React.Component {
 
   _gotoHomeScreen = () => {
     this.FireBase._setMyName(this.state.textinput)
+    this.FireBase._setMyMonster(this.state.nowcolor == 'right' ? this.characterImage[this.state.nowselect].right.png : this.characterImage[this.state.nowselect].left.png)
     this.props.navigation.navigate('id')
   }
 
@@ -198,9 +199,13 @@ export default class SelectScreen extends React.Component {
     })
   }
 
+  _pressMonster = (index) => {
+    this.scroll.scrollTo({ x: (this.characterWidth + 20) * (index - 1) })
+  }
+
   render() {
     const character = this.characterImage.map((buffer, index) => {
-      return <Character key={index} index={index} characterWidth={this.characterWidth} scrollposi={this.state.scrollposi} png={buffer.nowcolor == 'left' ? buffer.left.png : buffer.right.png} />
+      return <Character key={index} index={index} select={this.state.nowselect} characterWidth={this.characterWidth} scrollposi={this.state.scrollposi} png={buffer.nowcolor == 'left' ? buffer.left.png : buffer.right.png} onPress={() => this._pressMonster(index)} />
     })
     return (
       <View style={{ flex: 1 }}>
@@ -227,11 +232,11 @@ export default class SelectScreen extends React.Component {
               </ScrollView>
             </View>
             <Animated.View style={{ position: 'absolute', height: '40%', width: '100%', bottom: this.state.inputheigh, justifyContent: 'center' }}>
-              <View style={{ width: '85%', height: '70%', backgroundColor: '#F4EDE9', borderRadius: '45%', alignSelf: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-                <TextInput style={{ flex: 0.75, fontSize: 18, lineHeight: 21, paddingLeft: 20 }} placeholder={'輸入暱稱'} placeholderTextColor={'#B9B7B7'} clearButtonMode='while-editing' onChangeText={(text) => this._onChangeText(text)} />
+              <View style={{ width: '70%', height: '60%', backgroundColor: 'white', borderRadius: '45%', alignSelf: 'center', justifyContent: 'center', flexDirection: 'row', borderWidth: 1, borderColor: '#8AC4C4' }}>
+                <TextInput style={{ flex: 0.75, fontSize: 18, lineHeight: 21, paddingLeft: 20 }} placeholder={'輸入暱稱'} placeholderTextColor={'#8AC4C4'} clearButtonMode='while-editing' onChangeText={(text) => this._onChangeText(text)} />
                 <View style={{ flex: 0.25, justifyContent: 'center' }}>
-                  <TouchableOpacity style={{ width: '70%', aspectRatio: 1, borderRadius: '50%' }} onPress={() => this._gotoHomeScreen()} >
-                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/enter.png')} />
+                  <TouchableOpacity style={{ width: '70%', aspectRatio: 1, borderRadius: '50%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoHomeScreen()} >
+                    <Image style={{ width: '60%', height: '60%', resizeMode: 'contain' }} source={require('../assets/icon/arrow_w.png')} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -264,8 +269,10 @@ class Character extends React.Component {
 
 
     return (
-      <Animated.View style={[{ width: characterWidth, aspectRatio: 1, borderRadius: '50%', backgroundColor: 'white', marginLeft: 20, alignItems: 'center', justifyContent: 'center', top: new Animated.Value(aa).interpolate({ inputRange: [-characterWidth * 3, -characterWidth * 2, -characterWidth, -5, 5, characterWidth, characterWidth * 2, characterWidth * 3], outputRange: [160, 80, 20, 0, 0, 20, 80, 160] }) }, this.props.index == 0 && { marginLeft: 30 }]} >
-        <Image style={{ width: characterWidth * 3 / 5, resizeMode: 'contain', }} source={this.props.png} />
+      <Animated.View style={[{ width: characterWidth, aspectRatio: 1, borderRadius: '50%', backgroundColor: 'white', marginLeft: 20, alignItems: 'center', justifyContent: 'center', top: new Animated.Value(aa).interpolate({ inputRange: [-characterWidth * 3, -characterWidth * 2, -characterWidth, 0, characterWidth, characterWidth * 2, characterWidth * 3], outputRange: [160, 80, 20, 0, 20, 80, 160] }) }, this.props.index == 0 && { marginLeft: 30 }, this.props.select == this.props.index && { borderWidth: 3, borderColor: '#9BD0D0' }]} >
+        <TouchableOpacity onPress={this.props.onPress} activeOpacity={0.8} >
+          <Image style={{ width: characterWidth * 3 / 5, resizeMode: 'contain', }} source={this.props.png} />
+        </TouchableOpacity>
       </Animated.View>
     )
   }

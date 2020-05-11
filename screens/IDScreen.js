@@ -72,7 +72,7 @@ export default class IDScreen extends React.Component {
         </View>
 
         <TouchableOpacity style={{ position: 'absolute', width: '80%', height: '8%', borderRadius: '50%', backgroundColor: '#8AC4C4', bottom: '5%', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }} activeOpacity={0.8} onPress={() => this._nextstep()} >
-          <Text style={{ fontSize: 18, lineHeight: 21, color: 'white' }} >下一步</Text>
+          <Text style={{ fontSize: 18, lineHeight: 21, color: 'white' }} >開始</Text>
         </TouchableOpacity>
 
       </View>

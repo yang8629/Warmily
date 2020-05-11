@@ -21,6 +21,7 @@ import MemoirScreen from '../screens/MemoirScreen';
 import IDScreen from '../screens/IDScreen';
 import GuideScreen from '../screens/GuideScreen';
 import FamilyScreen from '../screens/FamilyScreen';
+import NotifyScreen from '../screens/NotifyScreen';
 
 import FireBaseManager from '../components/FireBaseManager';
 
@@ -71,6 +72,10 @@ export default function StackNavigator({ navigation, route }) {
       <mainStack.Screen
         name="iceberg"
         component={IcebergScreen}
+      />
+      <mainStack.Screen
+        name="notify"
+        component={NotifyScreen}
       />
     </mainStack.Navigator>
   );

@@ -248,9 +248,21 @@ export default class MemoirScreen extends React.Component {
 
           <View style={{ flex: 0.92, alignItems: 'center', backgroundColor: '#F4EDE9' }}>
 
-            <ScrollView style={{ width: '100%' }} bounces={false} ref={scroll => this.mainscroll = scroll} onContentSizeChange={() => this.mainscroll.scrollTo({ x: 0, y: 0, animated: true })} >
+            <ScrollView style={{ width: '100%' }} bounces={false} ref={scroll => this.mainscroll = scroll} onContentSizeChange={() => this.mainscroll.scrollTo({ x: 0, y: 0, animated: true })} showsVerticalScrollIndicator={false} >
 
+              <View style={{ position: 'absolute', right: 0, bottom: 0 }} >
+                <Image style={{}} source={require('../assets/icon/sofa.png')} />
+              </View>
+              <View style={{ position: 'absolute', left: 20, bottom: 0 }} >
+                <Image style={{}} source={require('../assets/icon/lamp.png')} />
+              </View>
 
+              <View style={{ position: 'absolute', left: 0, bottom: screenHeight * 0.4 }} >
+                <Image style={{}} source={require('../assets/icon/flower.png')} />
+              </View>
+              <View style={{ position: 'absolute', right: 0, bottom: screenHeight * 0.6 }} >
+                <Image style={{}} source={require('../assets/icon/book.png')} />
+              </View>
 
               {this.photos.length > 5 ?
                 <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

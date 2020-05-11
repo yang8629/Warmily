@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-        backgroundColor: 'red',
+        backgroundColor: '#E89185',
         top: 0,
     },
     showPhoto: {

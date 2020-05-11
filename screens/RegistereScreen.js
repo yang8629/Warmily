@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    Animated,
-    Easing,
-    Dimensions,
-    Keyboard,
-} from 'react-native';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Animated, Easing, Dimensions, Keyboard, } from 'react-native';
 import { Icon } from 'react-native-elements';
 import FireBaseManager from '../components/FireBaseManager';
 
@@ -29,7 +18,9 @@ export default class RegistereScreen extends React.Component {
         this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this._showKeyboard);
         this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this._hidKeyboard);
         this.state = {
-            keyboard: false
+            keyboard: false,
+            email: '',
+            password: '',
         }
     }
 
@@ -45,6 +36,17 @@ export default class RegistereScreen extends React.Component {
         this.props.navigation.navigate('family')
     }
 
+    _gotoLoginScreen = () => {
+        this.props.navigation.navigate('login')
+    }
+
+    _signUp = async () => {
+        buffer = await this.Firebase._Registere(this.state.email, this.state.password)
+        if (buffer) {
+            this._gotoFamilyScreen()
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -53,8 +55,8 @@ export default class RegistereScreen extends React.Component {
                 </View>
 
                 <View style={{ flex: 0.6, width: '100%', alignItems: 'center' }}>
-                    <View style={{ width: '80%', height: '90%', backgroundColor: '#F4EDE9', borderRadius: '20%' }}>
-                        <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'space-around', paddingTop: '5%' }}>
+                    <View style={{ width: '80%', height: '90%', backgroundColor: '#F4EDE9' }}>
+                        <View style={{ flex: 0.4, alignItems: 'center' }}>
 
                             {this.state.keyboard ?
                                 < TouchableOpacity style={{ position: 'absolute', bottom: 0, width: this.screenWidth, height: this.screenHeight }} activeOpacity={1} onPress={() => Keyboard.dismiss()} />
@@ -62,20 +64,28 @@ export default class RegistereScreen extends React.Component {
                                 null
                             }
 
-                            <View style={{ flex: 0.3, width: '90%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
-                                <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入email' placeholderTextColor='#C4C4C4' ref={input => this.emailinput = input} />
+                            <View style={{ width: '90%', height: '30%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                                <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入email' placeholderTextColor='#C4C4C4' onChangeText={(text) => this.setState({ email: text })} keyboardType='email-address' />
                             </View>
-                            <View style={{ flex: 0.3, width: '90%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }}>
-                                <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入密碼' placeholderTextColor='#C4C4C4' secureTextEntry={true} ref={input => this.passwordinput = input} />
+                            <View style={{ width: '90%', height: '30%', backgroundColor: 'white', borderRadius: '40%', alignItems: 'center', justifyContent: 'center', marginTop: 25, }}>
+                                <TextInput style={{ width: '90%', fontSize: 14 }} placeholder='輸入密碼' placeholderTextColor='#C4C4C4' secureTextEntry={true} onChangeText={(text) => this.setState({ password: text })} />
                             </View>
 
                         </View>
-                        <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', paddingBottom: '5%' }}>
-                            <TouchableOpacity style={{ height: '30%', width: '90%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoFamilyScreen()}>
-                                <Text style={{ color: 'white', fontSize: 17 }}>註冊</Text>
+                        <View style={{ flex: 0.6, justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <TouchableOpacity style={[{ width: '90%', height: '22%', backgroundColor: '#8AC4C4', borderRadius: '40%', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} onPress={() => this._signUp()}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>註冊</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ height: '30%', width: '90%', borderRadius: '40%', borderWidth: 1, borderColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center', marginTop: 15, padding: 10 }}>
-                                <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }}>以 Google 帳號登入</Text>
+                            <TouchableOpacity style={[{ width: '90%', height: '22%', flexDirection: 'row', borderRadius: '40%', alignItems: 'center', justifyContent: 'center', marginTop: 20, backgroundColor: '#EC8D7B' }, styles.shadow]} onPress={() => this.props.navigation.navigate('family')} >
+                                <View style={{ height: '80%' }}>
+                                    <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/google.png')} />
+                                </View>
+                                <View style={{ marginLeft: 5 }} >
+                                    <Text style={{ color: 'white', fontSize: 18 }}>使用 Google 帳號登入</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ position: 'absolute', bottom: 0 }} onPress={() => this._gotoLoginScreen()} >
+                                <Text style={{ color: '#83BEBA', fontSize: 14, lineHeight: 16 }} >已經有帳號?登入</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -93,65 +103,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#F4EDE9',
         alignItems: 'center',
     },
-    Logo: {
-        width: 10,
-        flex: 0.4,
-        justifyContent: 'center',
-        alignSelf: 'center',
-    },
-    Eye1: {
-        width: 175,
-        height: 175,
-        left: -87.5,
-        top: 10,
-        borderRadius: 87.5,
-        backgroundColor: '#DCDCDC',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    Eye2: {
-        width: 118,
-        height: 118,
-        borderRadius: 59,
-        backgroundColor: '#3C3C3C',
-        alignItems: 'center',
-    },
-    Eye3: {
-        width: 34,
-        height: 34,
-        top: 9,
-        borderRadius: 17,
-        backgroundColor: '#FFFFFF',
-    },
-    MainArea: {
-        flex: 0.4,
-    },
-    InputArea: {
-        flex: 0.5,
-        width: 10,
-    },
-    Input: {
-        width: 250,
-        height: 45,
-        left: -125,
-        fontSize: 18,
-        borderWidth: 2,
-        borderRadius: 20,
-        borderColor: '#6F6F6F',
-    },
-    BtnArea: {
-        flex: 0.5,
-        width: 10,
-    },
-    Btn: {
-        width: 250,
-        height: 45,
-        left: -125,
-        marginTop: 20,
-        backgroundColor: '#6F6F6F',
-        borderRadius: 20,
-    },
-    BottomArea: {
-        flex: 0.2,
+    shadow: {
+        ...Platform.select({
+            ios: {
+                shadowColor: 'black',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 20,
+            },
+        }),
     },
 })
