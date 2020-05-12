@@ -15,25 +15,11 @@ export default class HomeScreen extends React.Component {
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
   inputwidth = this.screenWidth * 0.576;
+  monstergif = this.FireBase._getMyMonstergif();
 
   constructor(props) {
     super(props);
-    // this._keyboardWillHideSubscription = Keyboard.addListener('keyboardDidHide', (e) => this._keyboardWillHide(e));
   }
-
-  // componentWillUnmount = () => {
-  //   _keyboardWillHideSubscription.remove();
-  // }
-
-  // _keyboardWillHide = (e) => {
-  //   if (this.state.textinput == '') {
-  //     Animated.timing(this.state.inputanimate, {
-  //       toValue: this.inputwidth,
-  //       easing: Easing.bounce,
-  //       duration: 100,
-  //     }).start()
-  //   }
-  // }
 
   state = {
     TagglebottomCard: true,
@@ -316,7 +302,7 @@ export default class HomeScreen extends React.Component {
             <View style={styles.ImgArea}>
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => this._gotoSettingScreen()} activeOpacity={1} >
-                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster01_blue.gif')} />
+                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={this.monstergif} />
                   <Text style={{ color: '#818181' }} >我</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(0), this._gotoChatScreen()]} activeOpacity={1} >

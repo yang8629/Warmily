@@ -13,7 +13,6 @@ const firebaseConfig = {
 export default class FireBaseManager {
     static FireBase = null;
 
-    first = false;
     ready = false;
     id = 1;     //1:小孩 2:家長
     remindamount = 6;
@@ -207,6 +206,7 @@ export default class FireBaseManager {
 
     name = '';
     monster = require('../assets/images/monster03_blue.png');
+    monstergif = require('../assets/gif/monster03_blue.gif');
 
     _setMyName = (buffer) => {
         this.name = buffer;
@@ -216,12 +216,17 @@ export default class FireBaseManager {
         return this.name;
     }
 
-    _setMyMonster = (buffer) => {
-        monster = buffer
+    _setMyMonster = (buffer, aa) => {
+        this.monster = buffer
+        this.monstergif = aa
     }
 
     _getMyMonster = () => {
         return this.monster
+    }
+
+    _getMyMonstergif = () => {
+        return this.monstergif
     }
 
     _setStorgeref = (buffer) => {
@@ -276,13 +281,25 @@ export default class FireBaseManager {
         })
     }
 
+
+    first = false;
+
     _getFirsttime = () => {
         return this.first;
     }
 
     _setFirsttime = (buffer) => {
         this.first = buffer;
-        return this.first
+    }
+
+    finish = true;
+
+    _setFinish = (buffer) => {
+        this.finish = buffer;
+    }
+
+    _getFinish = () => {
+        return this.finish;
     }
 
     _getID = () => {

@@ -126,7 +126,7 @@ export default class SelectScreen extends React.Component {
 
   _gotoHomeScreen = () => {
     this.FireBase._setMyName(this.state.textinput)
-    this.FireBase._setMyMonster(this.state.nowcolor == 'right' ? this.characterImage[this.state.nowselect].right.png : this.characterImage[this.state.nowselect].left.png)
+    this.FireBase._setMyMonster(this.state.nowcolor == 'right' ? this.characterImage[this.state.nowselect].right.png : this.characterImage[this.state.nowselect].left.png, this.state.nowcolor == 'right' ? this.characterImage[this.state.nowselect].right.gif : this.characterImage[this.state.nowselect].left.gif)
     this.props.navigation.navigate('id')
   }
 

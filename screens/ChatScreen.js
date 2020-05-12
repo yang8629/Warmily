@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Platform, Image, Animated, Easing, Keyboard, TextInput, StatusBar, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { Slider } from "@miblanchard/react-native-slider";
+import { StackActions } from '@react-navigation/native';
 import FireBaseManager from '../components/FireBaseManager';
 import What from '../assets/Emoji/What.svg'
 import Angry from '../assets/Emoji/Angry.svg'
@@ -21,6 +22,8 @@ export default class ChatScreen extends React.Component {
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
   family = this.FireBase._getFamily();
+  monstergif = this.FireBase._getMyMonstergif()
+  monsterpng = this.FireBase._getMyMonster()
 
   color = [
     {
@@ -517,6 +520,11 @@ export default class ChatScreen extends React.Component {
       protocolpage: false,
       finalprotocol: false,
     })
+    this.FireBase._setFinish(false)
+    this.props.navigation.dispatch(
+      StackActions.pop(1)
+    )
+    this.props.navigation.navigate('collect')
   }
 
   _checkProtocol = (buffer) => {
@@ -1535,9 +1543,9 @@ export default class ChatScreen extends React.Component {
                             <View style={{ flex: 0.3 }}>
                               <View style={{ height: '60%', alignItems: 'center' }}>
                                 {this.speak[speakamount].type == 0 || this.speak[speakamount].type == 2 ?
-                                  <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/gif/monster01_blue.gif')} />
+                                  <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.monstergif} />
                                   :
-                                  <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/images/monster01_blue.png')} />
+                                  <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.monsterpng} />
                                 }
                               </View>
                               <Text style={{ fontSize: 15, lineHeight: 18, color: '#6E6E6E', alignSelf: 'center', marginTop: 10 }}>我</Text>

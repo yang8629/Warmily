@@ -1,63 +1,69 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Platform, Image, Animated, Easing, Keyboard, TextInput, StatusBar, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Icon } from 'react-native-elements'
+import { Video } from 'expo-av';
+import FireBaseManager from '../components/FireBaseManager'
 
 export default class CollectScreen extends React.Component {
 
   backiconsize = 50;
+  FireBase = FireBaseManager.getInstance()
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
+  random = Math.ceil(Math.random() * 100) % 7;
 
   static navigationOptions = {
     header: null,
-    // ...TransitionPresets.ModalSlideFromBottomIOS,
   };
 
-
-  state = {
-    nowcollect: 0,
-    progress: new Animated.Value(-this.screenWidth * 0.36 * 0.9),
+  constructor(props) {
+    super(props)
+    this.state = {
+      nowcollect: 0,
+      progress: new Animated.Value(-this.screenWidth * 0.36 * 0.9),
+      finish: this.FireBase._getFinish(),
+    }
+    this.FireBase._setFinish(true)
   }
 
   collects = [{
     name: '洗衣機阿立',
     discription: '阿立洗淨了髒汙，讓彼此的心情更加澄淨',
     reason: '深入對話1ㄧ爸爸',
-    image: require('../assets/Collect/F1.png')
+    image: require('../assets/Collect/F1.png'),
+    video: require('../assets/Collect/Collect_1.mp4'),
   }, {
     name: '電鍋阿同',
     discription: '阿同煮出的菜餚，溫暖了一家人的胃',
-    image: require('../assets/Collect/F2.png')
+    image: require('../assets/Collect/F2.png'),
+    video: require('../assets/Collect/Collect_2.mp4'),
   }, {
     name: '吐司機阿寶',
     discription: '阿寶給予適當的溫暖，讓彼此擁有最佳的風味',
     reason: '深入對話3ㄧ媽媽',
-    image: require('../assets/Collect/F3.png')
+    image: require('../assets/Collect/F3.png'),
+    video: require('../assets/Collect/Collect_3.mp4'),
   }, {
     name: '風扇小夏',
     discription: '小夏微風徐徐吹來，燥熱不安的情緒隨之散去',
-    image: require('../assets/Collect/F4.png')
+    image: require('../assets/Collect/F4.png'),
+    video: require('../assets/Collect/Collect_4.mp4'),
   }, {
     name: '檯燈小菲',
     discription: '小菲照亮了一家，驅走了所有黑暗',
-    image: require('../assets/Collect/F5.png')
+    image: require('../assets/Collect/F5.png'),
+    video: require('../assets/Collect/Collect_5.mp4'),
   }, {
     name: '馬桶阿杜',
     discription: '阿杜大水一沖，沖走了一切堵塞與不愉快',
-    image: require('../assets/Collect/F6.png')
+    image: require('../assets/Collect/F6.png'),
+    video: require('../assets/Collect/Collect_6.mp4'),
   }, {
     name: '果汁機阿亞',
     discription: '阿亞把東西巧妙融合，拉近了彼此的距離',
-    image: require('../assets/Collect/F7.png')
+    image: require('../assets/Collect/F7.png'),
+    video: require('../assets/Collect/Collect_7.mp4'),
   },]
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
 
   _gotoHomeScreem = () => {
     this.props.navigation.navigate('Home')
@@ -68,7 +74,9 @@ export default class CollectScreen extends React.Component {
   }
 
   _changeCollect = (buffer) => {
-    this.setState({ nowcollect: buffer })
+    this.setState({
+      nowcollect: buffer,
+    })
   }
 
   _onScroll = (event) => {
@@ -91,8 +99,6 @@ export default class CollectScreen extends React.Component {
       collect = 5
     } else if (y < 7.5) {
       collect = 6
-    } else if (y < 8.5) {
-      collect = 7
     }
 
     this.setState({ nowcollect: collect })
@@ -109,17 +115,21 @@ export default class CollectScreen extends React.Component {
       <View style={[styles.container, { backgroundColor: '#F4EDE9' }]}>
         <View style={{ position: 'absolute', height: '43%', width: '100%', backgroundColor: '#E4DBD5' }} />
 
+        {this.state.finish ?
+          null
+          :
+          <Video style={{ position: 'absolute', width: screenWidth, height: screenHeight, zIndex: 2, alignSelf: 'center' }} onPlaybackStatusUpdate={x => this.setState({ finish: x.didJustFinish })} resizeMode='contain' shouldPlay={true} source={this.collects[this.random].video} />
+        }
+
         <Header progress={this.state.progress} size={this.backiconsize} type={null} onPress={() => this._gobackScreen()} hintPage={() => this._toggleHintpage()} />
 
         <View style={{ flex: 0.9, alignItems: 'center' }}>
 
-          <View style={{ flex: 0.3, justifyContent: 'flex-end' }} >
-          </View>
+          <View style={{ flex: 0.3, justifyContent: 'flex-end' }} />
 
           <View style={{ flex: 0.4, width: '100%', alignItems: 'center' }}>
             <View style={{ height: 160, alignItems: 'center' }} >
               <Image style={{}} source={require('../assets/Collect/stage.png')} />
-
               {this.collects[this.state.nowcollect].reason ?
                 <View style={{ position: 'absolute', width: '100%', alignItems: 'center', justifyContent: 'center', top: '66%' }} >
                   <Image style={{ width: '50%', resizeMode: 'contain' }} source={require('../assets/Collect/yellow.png')} />
