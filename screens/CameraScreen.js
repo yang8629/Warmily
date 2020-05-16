@@ -45,7 +45,19 @@ export default class CameraScreen extends React.Component {
             onPanResponderMove: (event, ges) => this._onPanResponderMove(event, ges),
             onPanResponderRelease: () => this.onPanResponderRelease(),
         })
+        this.getPermissionAsync()
     }
+
+
+    getPermissionAsync = async () => {
+        if (Constants.platform.ios) {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            }
+        }
+    }
+
 
     _onPanResponderMove = (event, ges) => {
         var dy = Math.floor((ges.dy / -350) * 1000) / 1000;

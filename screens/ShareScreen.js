@@ -47,6 +47,7 @@ export default class ShareScreen extends React.Component {
                     </View>
                     <View style={{ width: '70%', padding: 20, borderRadius: '30%', backgroundColor: 'white', marginBottom: 30 }} >
                         <Text style={{ fontSize: 18, color: '#B9B7B7' }} >https://www.figma.com/file/MAH0A4Mohxu6VGcRfClAcS/Untitled?node-id=1011%3A3X</Text>
+                        {/* <TextInput dataDetectorTypes='link' /> */}
                     </View>
                     <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'space-evenly', alignItems: 'center' }} >
                         <View style={{ alignItems: 'center', justifyContent: 'center' }} >

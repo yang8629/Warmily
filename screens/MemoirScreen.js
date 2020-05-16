@@ -23,6 +23,17 @@ export default class MemoirScreen extends React.Component {
   constructor(props) {
     super(props)
     this.getPermissionAsync();
+    this.state = {
+      albumheight: new Animated.Value(this.screenHeight),
+      imagebrowerheight: new Animated.Value(this.screenHeight),
+      addheight: new Animated.Value(this.screenHeight),
+      order: 0,
+      photos: '',
+      title: '',
+      description: '',
+      imageheight: new Animated.Value(0),
+      scaleimage: null,
+    }
   }
 
   getPermissionAsync = async () => {
@@ -32,16 +43,6 @@ export default class MemoirScreen extends React.Component {
         alert('Sorry, we need camera roll permissions to make this work!');
       }
     }
-  }
-
-  state = {
-    albumheight: new Animated.Value(this.screenHeight),
-    imagebrowerheight: new Animated.Value(this.screenHeight),
-    addheight: new Animated.Value(this.screenHeight),
-    order: 0,
-    photos: '',
-    title: '',
-    description: '',
   }
 
   memoirs = [{
@@ -237,6 +238,24 @@ export default class MemoirScreen extends React.Component {
     this._toggleAdd(false)
   }
 
+  _scaleImage = async (img) => {
+    await this.setState({ scaleimage: img })
+    Animated.timing(this.state.imageheight, {
+      toValue: this.screenHeight,
+      easing: Easing.ease,
+      duration: 400,
+    }).start()
+  }
+
+  _closeImage = () => {
+    Animated.timing(this.state.imageheight, {
+      toValue: 0,
+      easing: Easing.ease,
+      duration: 300,
+    }).start()
+    this.setState({ scaleimage: null })
+  }
+
   render() {
     const { screenWidth, screenHeight, resize } = this
     const { order } = this.state
@@ -364,7 +383,7 @@ export default class MemoirScreen extends React.Component {
 
           <View style={{ flex: 0.9, alignItems: 'center' }}>
 
-            <FlatList style={{ backgroundColor: '#E5E5E5', width: '100%', }} data={this.photos[order].photos} numColumns={2} ListHeaderComponent={() => ListHeader(this.photos[order].header, screenHeight, order)} keyExtractor={(item, index) => { return index.toString(); }} renderItem={(buffer) => PhotoBlock(buffer.item, screenWidth, this.state.order)} />
+            <FlatList style={{ backgroundColor: '#E5E5E5', width: '100%', }} data={this.photos[order].photos} numColumns={2} ListHeaderComponent={() => ListHeader(this.photos[order].header, screenHeight, order)} keyExtractor={(item, index) => { return index.toString(); }} renderItem={(buffer) => PhotoBlock(buffer.item, screenWidth, this.state.order, () => this._scaleImage(buffer.item.photo))} />
 
             <View style={[styles.shadow, { position: 'absolute', right: '10%', bottom: '10%' }]} >
               <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleImageBrower(true)}  >
@@ -404,8 +423,16 @@ export default class MemoirScreen extends React.Component {
             </View>
           </View>
 
-          <FlatList data={this.state.photos} numColumns={3} keyExtractor={(item, index) => { return index.toString(); }} renderItem={(buffer) => AddBlock(buffer.item, screenWidth)} />
+          <FlatList data={this.state.photos} numColumns={3} keyExtractor={(item, index) => { return index.toString(); }} renderItem={(buffer) => AddBlock(buffer.item, screenWidth, () => this._scaleImage())} />
 
+        </Animated.View>
+
+        <Animated.View style={{ position: 'absolute', width: this.state.imageheight.interpolate({ inputRange: [0, screenHeight], outputRange: [0, screenWidth] }), height: this.state.imageheight, top: this.state.imageheight.interpolate({ inputRange: [0, screenHeight], outputRange: [screenWidth / 2, 0] }), alignSelf: 'center', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', backgroundColor: '#E5E5E5', }} >
+          {/* <Animated.View style={{ position: 'absolute', alignSelf: 'center', width: screenWidth, height: screenHeight }} > */}
+          <TouchableOpacity onPress={() => this._closeImage()} activeOpacity={0.8}>
+            {/* <Image style={{ position: 'absolute', alignSelf: 'center', width: 200, height: 200 }} resizeMode='contain' source={require('../assets/icon/loading.gif')} /> */}
+            <Image style={{ width: screenWidth, height: screenHeight }} resizeMode='contain' defaultSource={require('../assets/icon/loading.gif')} source={this.state.scaleimage} />
+          </TouchableOpacity>
         </Animated.View>
 
       </View >
@@ -462,17 +489,21 @@ function ListHeader(header, screenHeight, order) {
   )
 }
 
-function PhotoBlock(buffer, screenWidth, order) {
+function PhotoBlock(buffer, screenWidth, order, fun) {
   if (order < 3) {
     return (
       <View style={{ width: screenWidth / 2, aspectRatio: 1, padding: 1 }}>
-        <Image style={{ width: '100%', height: '100%' }} source={buffer.photo} />
+        <TouchableOpacity onPress={fun}>
+          <Image style={{ width: '100%', height: '100%' }} source={buffer.photo} />
+        </TouchableOpacity>
       </View>
     )
   } else {
     return (
       <View style={{ width: screenWidth / 2, aspectRatio: 1, padding: 1 }}>
-        <Image style={{ width: '100%', height: '100%' }} source={{ uri: buffer.photo }} />
+        <TouchableOpacity onPress={fun}>
+          <Image style={{ width: '100%', height: '100%' }} source={{ uri: buffer.photo }} />
+        </TouchableOpacity>
       </View>
     )
   }

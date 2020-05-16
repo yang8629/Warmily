@@ -22,7 +22,7 @@ export default class StorysScreen extends React.Component {
         head: require('../assets/images/f11.png'),
         reading: false,
         storys: [{
-            backgroundImage: require('../assets/images/aa.png'),
+            backgroundImage: require('../assets/images/aa.jpg'),
             time: 4
         },
             // {
@@ -58,7 +58,7 @@ export default class StorysScreen extends React.Component {
             backgroundImage: require('../assets/images/story.png'),
             time: 4,
         }, {
-            backgroundImage: require('../assets/images/aa.png'),
+            backgroundImage: require('../assets/images/aa.jpg'),
             time: 3,
         }],
         starttimer: null,
@@ -87,7 +87,7 @@ export default class StorysScreen extends React.Component {
             backgroundImage: require('../assets/images/story1.png'),
             time: 4,
         }, {
-            backgroundImage: require('../assets/images/aa.png'),
+            backgroundImage: require('../assets/images/aa.jpg'),
             time: 3,
         }],
         starttimer: null,
@@ -116,7 +116,7 @@ export default class StorysScreen extends React.Component {
             backgroundImage: require('../assets/images/story.png'),
             time: 4,
         }, {
-            backgroundImage: require('../assets/images/aa.png'),
+            backgroundImage: require('../assets/images/aa.jpg'),
             time: 3,
         }],
         starttimer: null,
@@ -145,7 +145,7 @@ export default class StorysScreen extends React.Component {
             backgroundImage: require('../assets/images/story.png'),
             time: 4,
         }, {
-            backgroundImage: require('../assets/images/aa.png'),
+            backgroundImage: require('../assets/images/aa.jpg'),
             time: 3,
         }],
         starttimer: null,

@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Platform, Image, 
 import { Icon } from 'react-native-elements'
 import { Slider } from "@miblanchard/react-native-slider";
 import { StackActions } from '@react-navigation/native';
+import { Video } from 'expo-av'
 import FireBaseManager from '../components/FireBaseManager';
 import What from '../assets/Emoji/What.svg'
 import Angry from '../assets/Emoji/Angry.svg'
@@ -24,6 +25,7 @@ export default class ChatScreen extends React.Component {
   family = this.FireBase._getFamily();
   monstergif = this.FireBase._getMyMonstergif()
   monsterpng = this.FireBase._getMyMonster()
+  random = Math.ceil(Math.random() * 100) % 7;
 
   color = [
     {
@@ -173,6 +175,22 @@ export default class ChatScreen extends React.Component {
   //   },],
   // },]
 
+  collects = [{
+    video: require('../assets/Collect/Collect_1.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_2.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_3.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_4.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_5.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_6.mp4'),
+  }, {
+    video: require('../assets/Collect/Collect_7.mp4'),
+  },]
+
   emoji = [{
     show: true,
     type: 'Angry',
@@ -239,6 +257,7 @@ export default class ChatScreen extends React.Component {
       checkprotocol: false,
       reprotocol: false,
       icebergdetail: false,
+      showvideo: false,
       detailpage: 0,
       thoughtorder: null,
       issuenumber: 0,
@@ -513,12 +532,34 @@ export default class ChatScreen extends React.Component {
   }
 
   _finishProtocol = () => {
+
     this.issues[this.state.issuenumber].finish = true
+
+    this.setState({
+      showvideo: true,
+    })
+
+    // this.setState({
+    //   issuepage: false,
+    //   thoughtpage: false,
+    //   protocolpage: false,
+    //   finalprotocol: false,
+    //   showvideo: true,
+    // })
+    // this.FireBase._setFinish(false)
+    // this.props.navigation.dispatch(
+    //   StackActions.pop(1)
+    // )
+    // this.props.navigation.navigate('collect')
+  }
+
+  _videoFinish = () => {
     this.setState({
       issuepage: false,
       thoughtpage: false,
       protocolpage: false,
       finalprotocol: false,
+      showvideo: true,
     })
     this.FireBase._setFinish(false)
     this.props.navigation.dispatch(
@@ -1203,6 +1244,15 @@ export default class ChatScreen extends React.Component {
 
                           </View>
                         </View>
+
+                        {this.state.showvideo ?
+                          <Video style={{ position: 'absolute', width: screenWidth, height: screenHeight, alignSelf: 'center' }} onPlaybackStatusUpdate={x => this.setState({ finish: x.didJustFinish })} resizeMode='contain' shouldPlay={true} source={this.collects[this.random].video} />
+                          :
+                          null
+                        }
+
+                        {this.state.finish ? this._videoFinish() : null}
+
                       </View>
                       :
                       null}

@@ -68,7 +68,11 @@ export default class AlbumScreen extends React.Component {
               <View style={{ position: 'absolute', width: 30, height: 30, backgroundColor: '#FFF', zIndex: -1 }} />
             </TouchableOpacity>
           </View>
-          
+
+          <View style={{ position: 'absolute', width: screenWidth, height: screenHeight, backgroundColor: 'red' }} >
+            <Image style={{}} source={require('../assets/images/story1.png')} />
+          </View>
+
         </View>
 
       </View>

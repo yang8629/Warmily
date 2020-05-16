@@ -21,11 +21,15 @@ export default class FireBaseManager {
     auth = null;
     remind = [];
     remind1 = [{
-        content: '冰箱的晚餐記得拿出來微波喔。',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '冰箱的晚餐記得拿出來微波喔。',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -38,14 +42,17 @@ export default class FireBaseManager {
         }],
         who: '媽媽',
         time: '1小時',
-        headimg: require('../assets/images/f32.png'),
         importent: false,
     }, {
-        content: '我今天會晚一點回家喔，有一個會要開。冰箱的晚餐記得拿出來微波，湯也在冰箱裡記得熱來喝。',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '我今天會晚一點回家喔，有一個會要開。冰箱的晚餐記得拿出來微波，湯也在冰箱裡記得熱來喝。',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -58,14 +65,17 @@ export default class FireBaseManager {
         }],
         who: '爸爸',
         time: '4小時',
-        headimg: require('../assets/images/f41.png'),
         importent: true,
     }, {
-        content: '我明天要去朋友家玩喔!',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '我明天要去朋友家玩喔!',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -78,14 +88,17 @@ export default class FireBaseManager {
         }],
         who: '姐姐',
         time: '15小時',
-        headimg: require('../assets/images/f52.png'),
         importent: false,
     }, {
-        content: '我這禮拜六要去朋友的生日派對',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '我這禮拜六要去朋友的生日派對',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -98,14 +111,17 @@ export default class FireBaseManager {
         }],
         who: '我',
         time: '20小時',
-        headimg: require('../assets/images/f22.png'),
         importent: false,
     }, {
-        content: '我這禮拜六要去朋友的生日派對',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '我這禮拜六要去朋友的生日派對',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -118,14 +134,17 @@ export default class FireBaseManager {
         }],
         who: '媽媽',
         time: '1天前',
-        headimg: require('../assets/images/f32.png'),
         importent: true,
     }, {
-        content: '冰箱的晚餐記得拿出來微波喔。',
-        checks: [{
+        content: [{
+            checkblock: false,
+            text: '冰箱的晚餐記得拿出來微波喔。',
+        }, {
+            checkblock: true,
             check: false,
             text: '晚餐'
         }, {
+            checkblock: true,
             check: false,
             text: '午餐'
         }],
@@ -138,7 +157,6 @@ export default class FireBaseManager {
         }],
         who: '媽媽',
         time: '2天前',
-        headimg: require('../assets/images/f32.png'),
         importent: false,
     }];
 
@@ -152,7 +170,7 @@ export default class FireBaseManager {
             storgeref = firebase.firestore().collection('Authen').doc('id');
             buffer = storgeref.collection('Remind').get().then(querySnapshot => {
                 querySnapshot.forEach(doc => { this.FireBase._setData(doc.data()) })
-            }).catch(() => alert('error'))
+            }).catch(error => alert(error.message))
             // buffer = setTimeout(() => { this.ready = true }, 2000);
             this.FireBase._setStorgeref(storgeref);
             this.FireBase._setReady(true);
@@ -242,27 +260,15 @@ export default class FireBaseManager {
     }
 
     _setData = (doc) => {
-        var checks = [], messages = []
+        var contents = [], messages = []
 
-        // for (let index = 0; index < doc.checks.length; index++) {
-        //     checks.push({
-        //         check: doc.checks[index].check,
-        //         text: doc.checks[index].text,
-        //     })
-        // }
-
-        doc.checks.forEach(check => {
-            checks.push({
-                check: check.check,
-                text: check.text,
+        doc.content.forEach(content => {
+            contents.push({
+                checkblock: content.checkblock,
+                text: content.text,
+                check: content.check || null,
             })
         })
-
-        // for (let index = 0; index < doc.messages.length; index++) {
-        //     messages.push({
-        //         text: doc.messages[index].text,
-        //     })
-        // }
 
         doc.messages.forEach(message => {
             messages.push({
@@ -271,12 +277,10 @@ export default class FireBaseManager {
         })
 
         this.remind.push({
-            content: doc.content,
-            checks: checks,
+            content: contents,
             messages: messages,
             who: doc.who,
             time: doc.time,
-            headimg: doc.headimg,
             importent: doc.importent,
         })
     }
@@ -336,20 +340,8 @@ export default class FireBaseManager {
 
         this.remind.unshift({
             content: buffer.content,
-            checks: [{
-                check: false,
-                text: '晚餐'
-            }, {
-                check: false,
-                text: '午餐'
-            }],
-            messages: [{
-                text: '真的假的',
-            }, {
-                text: '哈哈哈哈哈哈',
-            },],
+            messages: [],
             who: '我',
-            headimg: require('../assets/images/f11.png'),
             time: '現在',
             importent: buffer.importent,
         })

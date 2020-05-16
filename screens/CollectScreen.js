@@ -10,7 +10,7 @@ export default class CollectScreen extends React.Component {
   FireBase = FireBaseManager.getInstance()
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
-  random = Math.ceil(Math.random() * 100) % 7;
+  // random = Math.ceil(Math.random() * 100) % 7;
 
   static navigationOptions = {
     header: null,
@@ -115,11 +115,11 @@ export default class CollectScreen extends React.Component {
       <View style={[styles.container, { backgroundColor: '#F4EDE9' }]}>
         <View style={{ position: 'absolute', height: '43%', width: '100%', backgroundColor: '#E4DBD5' }} />
 
-        {this.state.finish ?
+        {/* {this.state.finish ?
           null
           :
           <Video style={{ position: 'absolute', width: screenWidth, height: screenHeight, zIndex: 2, alignSelf: 'center' }} onPlaybackStatusUpdate={x => this.setState({ finish: x.didJustFinish })} resizeMode='contain' shouldPlay={true} source={this.collects[this.random].video} />
-        }
+        } */}
 
         <Header progress={this.state.progress} size={this.backiconsize} type={null} onPress={() => this._gobackScreen()} hintPage={() => this._toggleHintpage()} />
 
