@@ -2,8 +2,9 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Image, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View, Animated, Easing, ScrollView, Keyboard, TextInput, Vibration, KeyboardAvoidingView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { MonoText } from '../components/StyledText';
-import FireBaseManager from '../components/FireBaseManager'
+import FireBaseManager from '../components/FireBaseManager';
+import { Asset } from 'expo-asset';
+import CacheAssetsAsync from '../constants/CachedAssetAsync';
 
 export default class HomeScreen extends React.Component {
 
@@ -15,7 +16,18 @@ export default class HomeScreen extends React.Component {
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
   inputwidth = this.screenWidth * 0.576;
-  monstergif = this.FireBase._getMyMonstergif();
+  monstergif = this.FireBase._getMyMonstergif() || require('../assets/gif/monster02_purple.gif');
+  gif = [{
+    image: require('../assets/gif/monster02_purple.gif'),
+  }, {
+    image: require('../assets/gif/monster03_pink.gif'),
+  }, {
+    image: require('../assets/gif/monster05_yellow.gif'),
+  }, {
+    image: require('../assets/gif/monster04_purple.gif'),
+  }, {
+    image: this.monstergif,
+  }]
 
   textinputlist = [{
     checkblock: false,
@@ -24,11 +36,13 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    this._loadAssetsAsync();
     this.state = {
       TagglebottomCard: true,
       changeheight: new Animated.Value(-330),
       inputanimate: new Animated.Value(this.inputwidth),
       inputheight: new Animated.Value(0),
+      showanimate: new Animated.Value(0),
       textinput: '',
       addremind: false,
       showkey: 0,
@@ -36,7 +50,26 @@ export default class HomeScreen extends React.Component {
       dirtydata: false,
       importent: false,
       nowinput: 0,
+      onfocus: false,
+      finish: false,
     };
+  }
+
+  async _loadAssetsAsync() {
+    var aa = []
+    this.gif.map(buffer => {
+      aa.push(buffer.image)
+    })
+
+    try {
+      await CacheAssetsAsync({
+        images: aa,
+      })
+    } catch (e) {
+      alert(e);
+    } finally {
+      this.setState({ finish: true })
+    }
   }
 
   _gotoChatScreen = () => {
@@ -120,7 +153,10 @@ export default class HomeScreen extends React.Component {
 
       this.remindamount = this.FireBase._setRemindamount(1);
 
-      this.textinputlist = []
+      this.textinputlist = [{
+        checkblock: false,
+        text: null,
+      }]
 
       this.setState({
         importent: false,
@@ -134,7 +170,6 @@ export default class HomeScreen extends React.Component {
       //   time: '現在',
       //   importent: this.state.importent,
       // })
-
 
       this._RemindPopup();
 
@@ -173,17 +208,37 @@ export default class HomeScreen extends React.Component {
       showremind: false,
       dirtydata: aa,
     });
-
   }
 
   _RemindPopup = () => {
+
     addremind = this.state.addremind
+
+    if (!addremind) {
+      Animated.timing(this.state.showanimate, {
+        toValue: this.screenHeight * 0.6,
+        easing: Easing.ease,
+        duration: 400,
+      }).start()
+    } else {
+      Animated.timing(this.state.showanimate, {
+        toValue: 0,
+        duration: 0,
+      }).start()
+    }
+
     this.setState({
       addremind: !addremind,
     })
   }
 
   _RemindShow = (props, index) => {
+    Animated.timing(this.state.showanimate, {
+      toValue: this.screenHeight * 0.8,
+      easing: Easing.ease,
+      duration: 400,
+    }).start()
+
     this.setState({
       showcontent: props.content,
       showcheck: props.check,
@@ -197,6 +252,12 @@ export default class HomeScreen extends React.Component {
   }
 
   _RemindClose = () => {
+    Animated.timing(this.state.showanimate, {
+      toValue: 0,
+      easing: Easing.bounce,
+      duration: 0,
+    }).start()
+
     this.setState({
       showremind: false,
     })
@@ -296,7 +357,7 @@ export default class HomeScreen extends React.Component {
           )
         } else {
           return (
-            <View style={{ marginTop: 30, marginBottom: 20, width: '95%', justifyContent: 'center' }} key={index} >
+            <View style={{ marginTop: 30, width: '95%', justifyContent: 'center' }} key={index} >
               <Text style={{ fontSize: 16, lineHeight: 19, color: this.state.showimportent ? 'white' : '#7D6E4D' }}>{buffer.text}</Text>
             </View>
           )
@@ -319,7 +380,7 @@ export default class HomeScreen extends React.Component {
       return (
         <View style={styles.RemindBG}>
 
-          <Animated.View style={{ width: '80%', height: '80%', backgroundColor: this.state.showimportent ? '#EC8D7B' : '#FFD173', borderRadius: 27, zIndex: 1, alignItems: 'center', bottom: this.state.inputheight }} >
+          <Animated.View style={{ width: this.state.showanimate.interpolate({ inputRange: [0, this.screenHeight * 0.8], outputRange: [0, this.screenWidth * 0.8] }), height: this.state.showanimate, backgroundColor: this.state.showimportent ? '#EC8D7B' : '#FFD173', borderRadius: 27, zIndex: 1, alignItems: 'center', bottom: this.state.inputheight }} >
 
             <View style={{ flex: 0.55, width: '100%', alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'rgba(255,255,255,0.36)' }}>
               <View style={{ flex: 0.2, flexDirection: 'row' }}>
@@ -347,13 +408,6 @@ export default class HomeScreen extends React.Component {
               </View>
 
               <ScrollView style={{ flex: 0.8, width: '70%' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }} >
-
-                {/* <View style={{ marginTop: 30, width: '95%', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 16, lineHeight: 19, color: this.state.showimportent ? 'white' : '#7D6E4D' }}></Text>
-                </View>
-                <View style={{ marginTop: 20, width: '90%', justifyContent: 'flex-start' }}>
-
-                </View> */}
 
                 {content}
 
@@ -393,6 +447,7 @@ export default class HomeScreen extends React.Component {
 
 
   render() {
+    const { addremind } = this.state
 
     const remind = this.remind.map((buffer, index) => {
       return (
@@ -407,230 +462,171 @@ export default class HomeScreen extends React.Component {
             <View style={{ width: '15%', alignItems: 'center', paddingTop: 5 }} >
               <View style={{ width: 20, height: 20, borderRadius: 5, borderWidth: 1, borderColor: this.state.showimportent ? 'white' : '#7D6E4D' }} />
             </View>
-            <TextInput multiline style={[{ width: '85%', height: '100%', fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5 }]} defaultValue={buffer.text} autoFocus={true} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} placeholderTextColor={this.state.showimportent ? 'white' : '#7D6E4D'} placeholder='還有甚麼要提醒的...' onChangeText={(text) => [this.textinputlist[index].text = text]} onFocus={() => this.state.nowinput = index} />
+            <TextInput multiline style={[{ width: '85%', height: '100%', fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5 }]} defaultValue={buffer.text} autoFocus={true} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} placeholderTextColor={this.state.showimportent ? 'white' : '#7D6E4D'} placeholder='還有甚麼要提醒的...' onChangeText={(text) => [this.textinputlist[index].text = text]} onFocus={() => [this.state.nowinput = index, this.setState({ onfocus: true })]} onBlur={() => this.setState({ onfocus: false })} />
           </View>
         )
       } else {
         if (this.textinputlist.length == 1) {
           return (
-            <TextInput multiline style={[{ width: '100%', height: this.screenHeight * 0.34, fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5 }]} defaultValue={buffer.text} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} placeholder='提醒家人....' placeholderTextColor={this.state.showimportent ? 'white' : '#7D6E4D'} onChangeText={(text) => [this.textinputlist[index].text = text]} key={index} onFocus={() => this.state.nowinput = index} />
+            <TextInput multiline style={[{ width: '100%', height: this.screenHeight * 0.34, fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5 }]} defaultValue={buffer.text} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} placeholder='提醒家人....' placeholderTextColor={this.state.showimportent ? 'white' : '#7D6E4D'} onChangeText={(text) => [this.textinputlist[index].text = text]} key={index} onFocus={() => [this.state.nowinput = index, this.setState({ onfocus: true })]} onBlur={() => this.setState({ onfocus: false })} />
           )
         } else {
           return (
-            <TextInput multiline style={[{ width: '100%', fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5, }]} defaultValue={buffer.text} autoFocus={true} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} placeholder='提醒家人....' placeholderTextColor={this.state.showimportent ? 'white' : '#7D6E4D'} onChangeText={(text) => [this.textinputlist[index].text = text]} key={index} onFocus={() => this.state.nowinput = index} />
+            <TextInput multiline style={[{ width: '100%', fontSize: 18, lineHeight: 21, color: this.state.importent ? 'white' : '#7D6E4D', padding: 5 }]} defaultValue={buffer.text} autoFocus={true} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => this._addTextinput()} onChangeText={(text) => [this.textinputlist[index].text = text]} key={index} onFocus={() => [this.state.nowinput = index, this.setState({ onfocus: true })]} onBlur={() => this.setState({ onfocus: false })} />
           )
         }
       }
     })
 
     return (
+
       <View style={styles.container} >
-        <View style={{ flex: 1 }}>
-          <View style={styles.TopCard}>
-            <TouchableOpacity style={{ position: 'absolute', width: 40, height: 40, borderRadius: 20, top: 30, left: 17 }} onPress={() => this._gotoCollectScreen()} >
-              <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/box.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.SettingBtn, { width: 40, height: 40, borderRadius: 20, }]} onPress={() => this._gotoNotifyScreen()}>
-              <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/notify.png')} />
-            </TouchableOpacity>
-            <View style={styles.ImgArea}>
-              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => this._gotoSettingScreen()} activeOpacity={1} >
-                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={this.monstergif} />
-                  <Text style={{ color: '#818181' }} >我</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(0), this._gotoChatScreen()]} activeOpacity={1} >
-                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster02_purple.gif')} />
-                  <Text style={{ color: '#818181' }}>媽媽</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(1), this._gotoChatScreen()]} activeOpacity={1} >
-                  <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={require('../assets/gif/monster03_pink.gif')} />
-                  <Text style={{ color: '#818181' }}>爸爸</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 30 }} >
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(2), this._gotoChatScreen()]} activeOpacity={1} >
-                  <Image style={styles.MonsterImgR} resizeMode='contain' source={require('../assets/gif/monster05_yellow.gif')} />
-                  <Text style={{ color: '#818181' }}>姐姐</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(3), this._gotoChatScreen()]} activeOpacity={1} >
-                  <Image style={styles.MonsterImgR} resizeMode='contain' source={require('../assets/gif/monster04_purple.gif')} />
-                  <Text style={{ color: '#818181' }}>哥哥</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{ position: 'absolute', width: '100%', height: '50%', top: '50%', backgroundColor: '#F4EDE9', borderBottomLeftRadius: 58, borderBottomRightRadius: 58, zIndex: 0 }} />
-          </View>
 
-          <View style={styles.maincontent}>
-            <View style={styles.RemindText}>
-              <Text style={{ flex: 0.2, fontSize: 20, lineHeight: 23, color: '#6E6E6E' }}>小提醒</Text>
-              <TouchableOpacity style={{ flex: 0.2 }} onPress={() => this._RemindPopup()}>
-                <Icon name='plus-circle' type='font-awesome' size={30} color='#CCCCCC' />
-              </TouchableOpacity>
-            </View>
-            <ScrollView style={styles.horizontalScroll} horizontal={true} showsHorizontalScrollIndicator={false} >
-              {remind}
-            </ScrollView>
-            <View style={{ flex: 0.6, width: '100%', flexDirection: 'row' }}>
-              <View style={{ flex: 0.3, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoCameraScreen()}>
-                  <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/camera.png')} />
-                </TouchableOpacity>
-              </View>
-              <View style={{ flex: 0.4, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', }}>
-                  <TouchableOpacity style={[{ width: 70, height: 70, borderRadius: 35, zIndex: 2, borderWidth: 5, borderColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} activeOpacity={1} onPress={() => this._gotoStoryScreen()}>
-                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f22.png')} />
-                  </TouchableOpacity>
-                  <View style={[{ position: 'absolute', width: 50, height: 50, borderRadius: 25, zIndex: 1, left: 15, borderWidth: 5, borderColor: '#8AC4C4' }, styles.shadow]} >
-                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f32.png')} />
-                  </View>
-                  <View style={[{ position: 'absolute', width: 50, height: 50, borderRadius: 25, zIndex: 1, right: 15, borderWidth: 5, borderColor: '#8AC4C4' }, styles.shadow]} >
-                    <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f12.png')} />
-                  </View>
-                </View>
-              </View>
-              <View style={{ flex: 0.3, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoMemoirScreen()}>
-                  <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/memory.png')} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
+        {this.state.finish ?
 
-        {
-          this.state.addremind ?
-            <TouchableOpacity style={[styles.RemindBG, {}]} onPress={() => Keyboard.dismiss()} activeOpacity={1} >
-              <KeyboardAvoidingView style={{ width: this.screenWidth, height: this.screenHeight, alignItems: 'center', justifyContent: 'center' }} behavior='position' keyboardVerticalOffset={-150} >
-                <View onStartShouldSetResponder={() => true} onResponderGrant={Keyboard.dismiss} style={[{ width: this.screenWidth * 0.8, height: this.screenHeight * 0.6, backgroundColor: '#FFD173', alignSelf: 'center', alignItems: 'center', borderRadius: 27, }, this.state.importent && { backgroundColor: '#EC8D7B' }]}>
+          <View style={styles.container} >
 
-                  <View style={{ flex: 0.15, width: '90%', justifyContent: 'center' }}>
-                    <TouchableOpacity style={{ height: '50%', aspectRatio: 1 }} onPress={() => this._RemindPopup(0)}>
-                      {this.state.importent ?
-                        <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/X.png')} />
-                        :
-                        <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/x_br.png')} />
-                      }
+            <View style={{ flex: 1 }}>
+              <View style={styles.TopCard}>
+                <TouchableOpacity style={{ position: 'absolute', width: 40, height: 40, borderRadius: 20, top: 30, left: 17 }} onPress={() => this._gotoCollectScreen()} >
+                  <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/box.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.SettingBtn, { width: 40, height: 40, borderRadius: 20, }]} onPress={() => this._gotoNotifyScreen()}>
+                  <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/notify.png')} />
+                </TouchableOpacity>
+                <View style={styles.ImgArea}>
+                  <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                    <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => this._gotoSettingScreen()} activeOpacity={1} >
+                      <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={this.monstergif} />
+                      <Text style={{ color: '#818181' }} >我</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(0), this._gotoChatScreen()]} activeOpacity={1} >
+                      <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={this.gif[0].image} />
+                      <Text style={{ color: '#818181' }}>媽媽</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center', width: 130, overflow: 'hidden' }} onPress={() => [this._setFamily(1), this._gotoChatScreen()]} activeOpacity={1} >
+                      <Image style={{ width: 150, height: 110, }} resizeMode='contain' source={this.gif[1].image} />
+                      <Text style={{ color: '#818181' }}>爸爸</Text>
                     </TouchableOpacity>
                   </View>
-
-                  <View style={{ flex: 0.65, width: '80%', justifyContent: 'flex-end' }}>
-                    <ScrollView style={{ width: '100%', height: '100%', borderRadius: 5, padding: 12, paddingTop: 20, backgroundColor: this.state.importent ? '#F1AC9F' : '#F9D998' }}>
-                      {/* <TextInput multiline style={{ width: '100%', fontSize: 18, lineHeight: 21, color: 'white', backgroundColor: 'red', padding: 5 }} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => alert('aa')} placeholder='提醒家人....' placeholderTextColor='white' onChangeText={(text) => [this._onChangeText(text)]} /> */}
-                      {textinputlist}
-                    </ScrollView>
+                  <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 30 }} >
+                    <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(2), this._gotoChatScreen()]} activeOpacity={1} >
+                      <Image style={styles.MonsterImgR} source={this.gif[2].image} />
+                      <Text style={{ color: '#818181' }}>姐姐</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => [this._setFamily(3), this._gotoChatScreen()]} activeOpacity={1} >
+                      <Image style={styles.MonsterImgR} source={this.gif[3].image} />
+                      <Text style={{ color: '#818181' }}>哥哥</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={{ flex: 0.2, width: '80%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <View style={{ flex: 0.1 }}>
-                      <TouchableOpacity style={{ width: 40, height: 40, borderRadius: 20 }} onPress={() => this._toggleImportent()} activeOpacity={0.5} >
-                        {this.state.importent ?
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_w.png')} />
-                          :
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_br.png')} />
-                        }
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 0.1 }}>
-                      <TouchableOpacity style={{ width: 40, height: 40, borderRadius: 20 }} activeOpacity={0.5} onPress={() => this._addCheck()}>
-                        {this.state.importent ?
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/checkbox.png')} />
-                          :
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/check_br.png')} />
-                        }
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 0.1 }} />
-                    <View style={{ flex: 0.3 }}>
-                      <TouchableOpacity style={{ width: '100%', height: 40, borderRadius: 30, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._AddRemind()} activeOpacity={0.8} >
-                        <Text style={{ fontSize: 18, lineHeight: 21, color: '#6E6E6E' }}>新增</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
                 </View>
+                <View style={{ position: 'absolute', width: '100%', height: '50%', top: '50%', backgroundColor: '#F4EDE9', borderBottomLeftRadius: 58, borderBottomRightRadius: 58, zIndex: 0 }} />
+              </View>
 
-              </KeyboardAvoidingView>
-            </TouchableOpacity>
-            :
-            null
-        }
+              <View style={styles.maincontent}>
+                <View style={styles.RemindText}>
+                  <Text style={{ flex: 0.2, fontSize: 20, lineHeight: 23, color: '#6E6E6E' }}>小提醒</Text>
+                  <TouchableOpacity style={{ flex: 0.2 }} onPress={() => this._RemindPopup()}>
+                    <Icon name='plus-circle' type='font-awesome' size={30} color='#CCCCCC' />
+                  </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.horizontalScroll} horizontal={true} showsHorizontalScrollIndicator={false} >
+                  {remind}
+                </ScrollView>
+                <View style={{ flex: 0.6, width: '100%', flexDirection: 'row' }}>
+                  <View style={{ flex: 0.3, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoCameraScreen()}>
+                      <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/camera.png')} />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 0.4, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', }}>
+                      <TouchableOpacity style={[{ width: 70, height: 70, borderRadius: 35, zIndex: 2, borderWidth: 5, borderColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} activeOpacity={1} onPress={() => this._gotoStoryScreen()}>
+                        <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f22.png')} />
+                      </TouchableOpacity>
+                      <View style={[{ position: 'absolute', width: 50, height: 50, borderRadius: 25, zIndex: 1, left: 15, borderWidth: 5, borderColor: '#8AC4C4' }, styles.shadow]} >
+                        <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f32.png')} />
+                      </View>
+                      <View style={[{ position: 'absolute', width: 50, height: 50, borderRadius: 25, zIndex: 1, right: 15, borderWidth: 5, borderColor: '#8AC4C4' }, styles.shadow]} >
+                        <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/images/f12.png')} />
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{ flex: 0.3, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity style={{ width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoMemoirScreen()}>
+                      <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/memory.png')} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
 
-        {/* {this.state.showremind ?
-            <View style={styles.RemindBG}>
+            {addremind ?
+              <TouchableOpacity style={[styles.RemindBG, {}]} onPress={() => { if (this.state.onfocus) { Keyboard.dismiss() } else { this._RemindPopup() } }} activeOpacity={1} >
+                <KeyboardAvoidingView style={{ width: this.screenWidth, height: this.screenHeight, alignItems: 'center', justifyContent: 'center' }} behavior='position' keyboardVerticalOffset={-150} >
 
-              <Animated.View style={{ width: '80%', height: '80%', backgroundColor: this.state.showimportent ? '#EC8D7B' : '#FFD173', borderRadius: 27, zIndex: 1, alignItems: 'center', bottom: this.state.inputheight }} >
+                  <Animated.View onStartShouldSetResponder={() => true} onResponderGrant={Keyboard.dismiss} style={[{ width: this.state.showanimate.interpolate({ inputRange: [0, this.screenHeight * 0.6], outputRange: [0, this.screenWidth * 0.8] }), height: this.state.showanimate, backgroundColor: '#FFD173', alignSelf: 'center', alignItems: 'center', borderRadius: 27, }, this.state.importent && { backgroundColor: '#EC8D7B' }]}>
 
-                <View style={{ flex: 0.55, width: '100%', alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'rgba(255,255,255,0.36)' }}>
-                  <View style={{ flex: 0.2, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }} >
-                      <TouchableOpacity style={{ height: '50%', aspectRatio: 1 }} onPress={() => this._RemindClose()} >
-                        {this.state.showimportent ?
+                    <View style={{ flex: 0.15, width: '90%', justifyContent: 'center' }}>
+                      <TouchableOpacity style={{ height: '50%', aspectRatio: 1 }} onPress={() => this._RemindPopup()}>
+                        {this.state.importent ?
                           <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/X.png')} />
                           :
                           <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/x_br.png')} />
                         }
                       </TouchableOpacity>
                     </View>
-                    <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                      <Text style={{ fontSize: 20, lineHeight: 23, fontWeight: 'bold', color: this.state.showimportent ? '#fff' : '#7D6E4D' }}>{this.state.showwho}</Text>
+
+                    <View style={{ flex: 0.65, width: '80%', justifyContent: 'flex-end' }}>
+                      <ScrollView style={{ width: '100%', height: '100%', borderRadius: 5, padding: 12, paddingTop: 20, backgroundColor: this.state.importent ? '#F1AC9F' : '#F9D998' }}>
+                        {/* <TextInput multiline style={{ width: '100%', fontSize: 18, lineHeight: 21, color: 'white', backgroundColor: 'red', padding: 5 }} blurOnSubmit={true} returnKeyType='next' onSubmitEditing={() => alert('aa')} placeholder='提醒家人....' placeholderTextColor='white' onChangeText={(text) => [this._onChangeText(text)]} /> */}
+                        {textinputlist}
+                      </ScrollView>
                     </View>
-                    <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }} >
-                      <TouchableOpacity style={{ height: '50%', aspectRatio: 1 }} onPress={() => this._setImportent()} >
-                        {this.state.showimportent ?
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_w.png')} />
-                          :
-                          <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_br.png')} />
-                        }
-                      </TouchableOpacity>
+                    <View style={{ flex: 0.2, width: '80%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <View style={{ flex: 0.1 }}>
+                        <TouchableOpacity style={{ width: 40, height: 40, borderRadius: 20 }} onPress={() => this._toggleImportent()} activeOpacity={0.5} >
+                          {this.state.importent ?
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_w.png')} />
+                            :
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/star_br.png')} />
+                          }
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ flex: 0.1 }}>
+                        <TouchableOpacity style={{ width: 40, height: 40, borderRadius: 20 }} activeOpacity={0.5} onPress={() => this._addCheck()}>
+                          {this.state.importent ?
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/checkbox.png')} />
+                            :
+                            <Image style={{ width: '100%', height: '100%' }} source={require('../assets/icon/check_br.png')} />
+                          }
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ flex: 0.1 }} />
+                      <View style={{ flex: 0.3 }}>
+                        <TouchableOpacity style={{ width: '100%', height: 40, borderRadius: 30, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._AddRemind()} activeOpacity={0.8} >
+                          <Text style={{ fontSize: 18, lineHeight: 21, color: '#6E6E6E' }}>新增</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>
 
-                  <ScrollView style={{ flex: 0.8, width: '70%' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }} >
+                  </Animated.View>
+                </KeyboardAvoidingView>
+              </TouchableOpacity>
 
-                    <View style={{ marginTop: 30, width: '95%', justifyContent: 'center' }}>
-                      <Text style={{ fontSize: 16, lineHeight: 19, color: this.state.showimportent ? 'white' : '#7D6E4D' }}>{this.state.showcontent}</Text>
-                    </View>
-                    <View style={{ marginTop: 20, width: '90%', justifyContent: 'flex-start' }}>
-                      {allcheck}
-                    </View>
+              :
+              null
+            }
 
-                  </ScrollView>
-                </View>
-
-                <View style={{ flex: 0.45, width: '100%', backgroundColor: this.state.showimportent ? '#EC8D7B' : '#FFD173', borderBottomLeftRadius: 27, borderBottomRightRadius: 27, alignItems: 'center' }}>
-                  <ScrollView style={{ width: '80%' }} contentContainerStyle={{ alignItems: 'center' }} contentInset={{ bottom: 10 }} >
-                    {message}
-                  </ScrollView>
-
-                  <View style={{ width: '72%', flexDirection: 'row', overflow: 'hidden', alignItems: 'center', paddingVertical: 15, bottom: 0 }} >
-                    <Animated.View style={{ width: this.state.inputanimate }} >
-                      <TextInput style={{ width: '100%', backgroundColor: 'white', borderRadius: 10, fontSize: 16, lineHeight: 19, padding: 10, paddingLeft: 14 }} placeholder='請輸入...' placeholderTextColor='#A3A3A3' onFocus={() => this._onFocus()} onChangeText={(text) => this._onChangeText(text)} onBlur={() => this._onBlur()} ref={input => this.textinput = input} />
-                    </Animated.View>
-                    <TouchableOpacity style={{ width: 20, alignItems: 'center', justifyContent: 'center', marginLeft: 8 }} onPress={() => this._sentMessage()}>
-                      <Image style={{ width: 25, height: 25, resizeMode: 'contain' }} source={require('../assets/icon/sent_w.png')} />
-                    </TouchableOpacity>
-                  </View>
-
-                </View>
-              </Animated.View>
-
-              <TouchableOpacity style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', zIndex: 0 }} onPress={() => this._RemindClose()} activeOpacity={1} />
-              {this.state.Keyboard ?
-                <TouchableOpacity style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', zIndex: 0 }} onPress={() => this._disFocus()} activeOpacity={1} />
-                :
-                null
-              }
-
-            </View>
-            :
-            null} */}
-
-        {this.ShowRemind(this.state.showremind, this.remind[this.state.showkey])}
+            {this.ShowRemind(this.state.showremind, this.remind[this.state.showkey])}
 
 
-      </View >
+          </View >
+
+          :
+          null}
+
+      </View>
     );
   }
 }
@@ -729,6 +725,7 @@ const styles = StyleSheet.create({
   MonsterImgR: {
     width: 150,
     height: 110,
+    resizeMode: 'contain',
   },
   SettingBtn: {
     position: 'absolute',

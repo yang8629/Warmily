@@ -6,6 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { ImageBrowser } from 'expo-multiple-media-imagepicker';
+import { Asset } from 'expo-asset';
+import CacheAssetsAsync from '../constants/CachedAssetAsync'
 
 export default class MemoirScreen extends React.Component {
 
@@ -23,6 +25,7 @@ export default class MemoirScreen extends React.Component {
   constructor(props) {
     super(props)
     this.getPermissionAsync();
+    this._loadAssetsAsync();
     this.state = {
       albumheight: new Animated.Value(this.screenHeight),
       imagebrowerheight: new Animated.Value(this.screenHeight),
@@ -33,6 +36,7 @@ export default class MemoirScreen extends React.Component {
       description: '',
       imageheight: new Animated.Value(0),
       scaleimage: null,
+      finish: false,
     }
   }
 
@@ -42,6 +46,25 @@ export default class MemoirScreen extends React.Component {
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to make this work!');
       }
+    }
+  }
+
+
+  async _loadAssetsAsync() {
+    var aa = []
+    this.memoirs.map(buffer => {
+      aa.push(buffer.image)
+    })
+    aa.push([require('../assets/Album/4.png')], [require('../assets/images/story.png')], [require('../assets/images/story1.png'),])
+
+    try {
+      await CacheAssetsAsync({
+        images: aa,
+      })
+    } catch (e) {
+      alert(e);
+    } finally {
+      this.setState({ finish: true })
     }
   }
 
@@ -134,14 +157,6 @@ export default class MemoirScreen extends React.Component {
     },
   }]
 
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   _gobackScreen = () => {
     this.props.navigation.navigate('home')
   }
@@ -150,8 +165,8 @@ export default class MemoirScreen extends React.Component {
     if (buffer) {
       Animated.timing(this.state.albumheight, {
         toValue: 0,
-        easing: Easing.ease,
-        duration: 300,
+        easing: Easing.cubic,
+        duration: 500,
       }).start()
       this.setState({ order: order })
     } else {
@@ -265,117 +280,122 @@ export default class MemoirScreen extends React.Component {
         <View style={[styles.container, { position: 'absolute', width: screenWidth, height: screenHeight }]} >
           <Header size={this.backiconsize} type={null} onPress={() => this._gobackScreen()} />
 
-          <View style={{ flex: 0.92, alignItems: 'center', backgroundColor: '#F4EDE9' }}>
+          {this.state.finish ?
+            <View style={{ flex: 0.92, alignItems: 'center', backgroundColor: '#F4EDE9' }}>
 
-            <ScrollView style={{ width: '100%' }} bounces={false} ref={scroll => this.mainscroll = scroll} onContentSizeChange={() => this.mainscroll.scrollTo({ x: 0, y: 0, animated: true })} showsVerticalScrollIndicator={false} >
+              <ScrollView style={{ width: '100%' }} bounces={false} ref={scroll => this.mainscroll = scroll} onContentSizeChange={() => this.mainscroll.scrollTo({ x: 0, y: 0, animated: true })} showsVerticalScrollIndicator={false} >
 
-              <View style={{ position: 'absolute', right: 0, bottom: 0 }} >
-                <Image style={{}} source={require('../assets/icon/sofa.png')} />
-              </View>
-              <View style={{ position: 'absolute', left: 20, bottom: 0 }} >
-                <Image style={{}} source={require('../assets/icon/lamp.png')} />
-              </View>
-
-              <View style={{ position: 'absolute', left: 0, bottom: screenHeight * 0.4 }} >
-                <Image style={{}} source={require('../assets/icon/flower.png')} />
-              </View>
-              <View style={{ position: 'absolute', right: 0, bottom: screenHeight * 0.6 }} >
-                <Image style={{}} source={require('../assets/icon/book.png')} />
-              </View>
-
-              {this.photos.length > 5 ?
-                <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                  {this.photos.length > 6 ?
-                    <Block style={{ backgroundColor: '#F1AC9F', bottom: 5 }} change={true} image={this.memoirs[11].image} description={this.memoirs[11].description} onPress={() => this._toggleAlbum(true, 6)} />
-                    :
-                    null
-                  }
-
-                  <Block style={{ backgroundColor: '#A9D0CD', left: 35, top: 15 }} change={true} image={this.memoirs[10].image} description={this.memoirs[10].description} onPress={() => this._toggleAlbum(true, 5)} />
-
-                  <View style={{ position: 'absolute', width: screenWidth * 0.15, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 150 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
-                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 220 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
-
+                <View style={{ position: 'absolute', right: 0, bottom: 0 }} >
+                  <Image style={{}} source={require('../assets/icon/sofa.png')} />
                 </View>
-                :
-                null
-              }
+                <View style={{ position: 'absolute', left: 20, bottom: 0 }} >
+                  <Image style={{}} source={require('../assets/icon/lamp.png')} />
+                </View>
+
+                <View style={{ position: 'absolute', left: 0, bottom: screenHeight * 0.4 }} >
+                  <Image style={{}} source={require('../assets/icon/flower.png')} />
+                </View>
+                <View style={{ position: 'absolute', right: 0, bottom: screenHeight * 0.6 }} >
+                  <Image style={{}} source={require('../assets/icon/book.png')} />
+                </View>
+
+                {this.photos.length > 5 ?
+                  <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                    {this.photos.length > 6 ?
+                      <Block style={{ backgroundColor: '#F1AC9F', bottom: 5 }} change={true} image={this.memoirs[11].image} description={this.memoirs[11].description} onPress={() => this._toggleAlbum(true, 6)} />
+                      :
+                      null
+                    }
+
+                    <Block style={{ backgroundColor: '#A9D0CD', left: 35, top: 15 }} change={true} image={this.memoirs[10].image} description={this.memoirs[10].description} onPress={() => this._toggleAlbum(true, 5)} />
+
+                    <View style={{ position: 'absolute', width: screenWidth * 0.15, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                    <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 150 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
+                    <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 220 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+
+                  </View>
+                  :
+                  null
+                }
 
 
-              {this.photos.length > 3 ?
+                {this.photos.length > 3 ?
+                  <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+
+                    <Block style={{ backgroundColor: '#FFD784', right: 30 }} change={true} image={this.memoirs[8].image} description={this.memoirs[8].description} onPress={() => this._toggleAlbum(true, 3)} />
+
+                    {this.photos.length > 4 ?
+                      <Block style={{ backgroundColor: '#A9D0CD', left: 65, bottom: 15 }} change={true} image={this.memoirs[9].image} description={this.memoirs[9].description} onPress={() => this._toggleAlbum(true, 4)} />
+                      :
+                      null
+                    }
+                    <View style={{ position: 'absolute', width: screenWidth * 0.4, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                    <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 220 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                    <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, top: 75, borderTopWidth: 10, borderLeftWidth: 10, borderTopLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
+                  </View>
+                  :
+                  null
+                }
+
                 <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
 
-                  <Block style={{ backgroundColor: '#FFD784', right: 30 }} change={true} image={this.memoirs[8].image} description={this.memoirs[8].description} onPress={() => this._toggleAlbum(true, 3)} />
+                  <Block style={{ backgroundColor: '#F1AC9F', right: 80, bottom: 20 }} image={this.memoirs[0].image} description={this.memoirs[0].description} onPress={() => this._toggleAlbum(true, 0)} />
+                  <Block style={{ backgroundColor: '#A9D0CD', right: 45 }} image={this.memoirs[1].image} description={this.memoirs[1].description} onPress={() => this._toggleAlbum(true, 0)} />
 
-                  {this.photos.length > 4 ?
-                    <Block style={{ backgroundColor: '#A9D0CD', left: 65, bottom: 15 }} change={true} image={this.memoirs[9].image} description={this.memoirs[9].description} onPress={() => this._toggleAlbum(true, 4)} />
-                    :
-                    null
-                  }
                   <View style={{ position: 'absolute', width: screenWidth * 0.4, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 220 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 200 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                </View>
+
+                <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+
+                  <Block style={{ backgroundColor: '#FFD784', right: 20, bottom: 10 }} image={this.memoirs[2].image} description={this.memoirs[2].description} />
+                  <Block style={{ backgroundColor: '#F1AC9F', left: 50 }} image={this.memoirs[3].image} description={this.memoirs[3].description} onPress={() => this._toggleAlbum(true, 1)} />
+
+                  <View style={{ position: 'absolute', width: screenWidth * 0.5, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 200 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
                   <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, top: 75, borderTopWidth: 10, borderLeftWidth: 10, borderTopLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
                 </View>
-                :
-                null
-              }
+                <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
 
-              <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Block style={{ backgroundColor: '#F1AC9F', right: 40, top: 20 }} image={this.memoirs[4].image} description={this.memoirs[4].description} onPress={() => this._toggleAlbum(true, 1)} />
+                  <Block style={{ backgroundColor: '#A9D0CD', left: 20 }} image={this.memoirs[5].image} description={this.memoirs[5].description} />
 
-                <Block style={{ backgroundColor: '#F1AC9F', right: 80, bottom: 20 }} image={this.memoirs[0].image} description={this.memoirs[0].description} onPress={() => this._toggleAlbum(true, 0)} />
-                <Block style={{ backgroundColor: '#A9D0CD', right: 45 }} image={this.memoirs[1].image} description={this.memoirs[1].description} onPress={() => this._toggleAlbum(true, 0)} />
+                  <View style={{ position: 'absolute', width: screenWidth * 0.5, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                </View>
+                <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
 
-                <View style={{ position: 'absolute', width: screenWidth * 0.4, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 200 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                  <Block style={{ backgroundColor: '#FFD784', right: 30 }} image={this.memoirs[6].image} description={this.memoirs[6].description} onPress={() => this._toggleAlbum(true, 2)} />
+
+                  <View style={{ position: 'absolute', width: screenWidth * 0.2, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 170 * resize, top: 75, borderTopWidth: 10, borderLeftWidth: 10, borderTopLeftRadius: '90%', borderColor: '#FFF', zIndex: -1 }} />
+                </View>
+
+                <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+
+                  <Block style={{ backgroundColor: '#F1AC9F' }} image={this.memoirs[7].image} description={this.memoirs[7].description} onPress={() => this._toggleAlbum(true, 2)} />
+
+                  <View style={{ position: 'absolute', width: '20%', borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
+                  <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 170 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '90%', borderColor: '#FFF', zIndex: -1 }} />
+                  {/* <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} /> */}
+                  <View style={{ position: 'absolute', height: 80, top: 80, borderLeftWidth: 10, borderColor: '#FFF', zIndex: -1 }} />
+                </View>
+              </ScrollView>
+
+              <View style={[styles.shadow, { position: 'absolute', right: '10%', bottom: '10%' }]} >
+                <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleImageBrower(true)} >
+                  <Image style={{ width: 60, height: 60, }} source={require('../assets/icon/add2.png')} />
+                </TouchableOpacity>
               </View>
-
-              <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-
-                <Block style={{ backgroundColor: '#FFD784', right: 20, bottom: 10 }} image={this.memoirs[2].image} description={this.memoirs[2].description} />
-                <Block style={{ backgroundColor: '#F1AC9F', left: 50 }} image={this.memoirs[3].image} description={this.memoirs[3].description} onPress={() => this._toggleAlbum(true, 1)} />
-
-                <View style={{ position: 'absolute', width: screenWidth * 0.5, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 200 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, top: 75, borderTopWidth: 10, borderLeftWidth: 10, borderTopLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
-              </View>
-              <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-
-                <Block style={{ backgroundColor: '#F1AC9F', right: 40, top: 20 }} image={this.memoirs[4].image} description={this.memoirs[4].description} onPress={() => this._toggleAlbum(true, 1)} />
-                <Block style={{ backgroundColor: '#A9D0CD', left: 20 }} image={this.memoirs[5].image} description={this.memoirs[5].description} />
-
-                <View style={{ position: 'absolute', width: screenWidth * 0.5, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 230 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '85%', borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
-              </View>
-              <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-
-                <Block style={{ backgroundColor: '#FFD784', right: 30 }} image={this.memoirs[6].image} description={this.memoirs[6].description} onPress={() => this._toggleAlbum(true, 2)} />
-
-                <View style={{ position: 'absolute', width: screenWidth * 0.2, borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, bottom: 75, borderBottomWidth: 10, borderRightWidth: 10, borderBottomRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 170 * resize, top: 75, borderTopWidth: 10, borderLeftWidth: 10, borderTopLeftRadius: '90%', borderColor: '#FFF', zIndex: -1 }} />
-              </View>
-
-              <View style={{ width: '100%', paddingTop: 20, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-
-                <Block style={{ backgroundColor: '#F1AC9F' }} image={this.memoirs[7].image} description={this.memoirs[7].description} onPress={() => this._toggleAlbum(true, 2)} />
-
-                <View style={{ position: 'absolute', width: '20%', borderWidth: 5, borderColor: '#FFF', zIndex: -1 }} />
-                <View style={{ position: 'absolute', height: 160, aspectRatio: 1, right: 170 * resize, bottom: 75, borderBottomWidth: 10, borderLeftWidth: 10, borderBottomLeftRadius: '90%', borderColor: '#FFF', zIndex: -1 }} />
-                {/* <View style={{ position: 'absolute', height: 160, aspectRatio: 1, left: 180 * resize, top: 75, borderTopWidth: 10, borderRightWidth: 10, borderTopRightRadius: '80%', borderColor: '#FFF', zIndex: -1 }} /> */}
-                <View style={{ position: 'absolute', height: 80, top: 80, borderLeftWidth: 10, borderColor: '#FFF', zIndex: -1 }} />
-              </View>
-            </ScrollView>
-
-            <View style={[styles.shadow, { position: 'absolute', right: '10%', bottom: '10%' }]} >
-              <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => this._toggleImageBrower(true)} >
-                <Image style={{ width: 60, height: 60, }} source={require('../assets/icon/add2.png')} />
-              </TouchableOpacity>
             </View>
-          </View>
+            : null}
+
         </View>
+
+
 
         <Animated.View style={{ position: 'absolute', width: screenWidth, height: screenHeight, top: this.state.albumheight, backgroundColor: '#E4DBD5' }}>
 
@@ -429,7 +449,7 @@ export default class MemoirScreen extends React.Component {
 
         <Animated.View style={{ position: 'absolute', width: this.state.imageheight.interpolate({ inputRange: [0, screenHeight], outputRange: [0, screenWidth] }), height: this.state.imageheight, top: this.state.imageheight.interpolate({ inputRange: [0, screenHeight], outputRange: [screenWidth / 2, 0] }), alignSelf: 'center', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', backgroundColor: '#E5E5E5', }} >
           {/* <Animated.View style={{ position: 'absolute', alignSelf: 'center', width: screenWidth, height: screenHeight }} > */}
-          <TouchableOpacity onPress={() => this._closeImage()} activeOpacity={0.8}>
+          <TouchableOpacity onPress={() => this._closeImage()} activeOpacity={1}>
             {/* <Image style={{ position: 'absolute', alignSelf: 'center', width: 200, height: 200 }} resizeMode='contain' source={require('../assets/icon/loading.gif')} /> */}
             <Image style={{ width: screenWidth, height: screenHeight }} resizeMode='contain' defaultSource={require('../assets/icon/loading.gif')} source={this.state.scaleimage} />
           </TouchableOpacity>

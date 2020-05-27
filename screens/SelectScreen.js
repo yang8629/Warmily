@@ -3,8 +3,9 @@ import { Image, KeyboardAvoidingView, Dimensions, Platform, StyleSheet, Text, To
 import { Icon } from 'react-native-elements';
 import { MonoText } from '../components/StyledText';
 import FireBaseManager from '../components/FireBaseManager';
-import { StackActions } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import CacheAssetsAsync from '../constants/CachedAssetAsync'
+
 
 export default class SelectScreen extends React.Component {
 
@@ -83,6 +84,24 @@ export default class SelectScreen extends React.Component {
   constructor(props) {
     super(props);
     this.FireBase = FireBaseManager.getInstance();
+    this._loadAssetsAsync()
+  }
+
+  async _loadAssetsAsync() {
+    var aa = []
+    this.characterImage.map(buffer => {
+      aa.push([buffer.left.gif], [buffer.left.png], [buffer.right.gif], [buffer.right.png])
+    })
+
+    try {
+      await CacheAssetsAsync({
+        images: aa,
+      })
+    } catch (e) {
+      alert(e);
+    } finally {
+      this.setState({ finish: true })
+    }
   }
 
   componentDidMount = () => {
@@ -172,10 +191,6 @@ export default class SelectScreen extends React.Component {
       select = 4
     }
 
-    // if (this.state.nowselect != select) {
-    //   alert(select)
-    // }
-
     this.setState({
       scrollposi: x,
       nowselect: select,
@@ -235,7 +250,7 @@ export default class SelectScreen extends React.Component {
               <View style={{ width: '70%', height: '60%', backgroundColor: 'white', borderRadius: '45%', alignSelf: 'center', justifyContent: 'center', flexDirection: 'row', borderWidth: 1, borderColor: '#8AC4C4' }}>
                 <TextInput style={{ flex: 0.75, fontSize: 18, lineHeight: 21, paddingLeft: 20 }} placeholder={'輸入暱稱'} placeholderTextColor={'#8AC4C4'} clearButtonMode='while-editing' onChangeText={(text) => this._onChangeText(text)} />
                 <View style={{ flex: 0.25, justifyContent: 'center' }}>
-                  <TouchableOpacity style={{ width: '70%', aspectRatio: 1, borderRadius: '50%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }} onPress={() => this._gotoHomeScreen()} >
+                  <TouchableOpacity style={[{ width: '70%', aspectRatio: 1, borderRadius: '50%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} onPress={() => this._gotoHomeScreen()} >
                     <Image style={{ width: '60%', height: '60%', resizeMode: 'contain' }} source={require('../assets/icon/arrow_w.png')} />
                   </TouchableOpacity>
                 </View>
@@ -286,5 +301,18 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: 20
+  },
+  shadow: {
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
   },
 });

@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Video } from 'expo-av';
 import FireBaseManager from '../components/FireBaseManager'
+import CacheAssetsAsync from '../constants/CachedAssetAsync'
 
 export default class StorysScreen extends React.Component {
     static navigationOptions = {
@@ -171,8 +172,6 @@ export default class StorysScreen extends React.Component {
     intervaltime = 0.1;
     scrollEnabled = true;
 
-
-
     _calltimer = null;
     _resettimer = null
 
@@ -195,6 +194,26 @@ export default class StorysScreen extends React.Component {
             count: true,
             stoptimer: false,
         };
+        this._loadAssetsAsync();
+    }
+
+    async _loadAssetsAsync() {
+        var aa = []
+        this.story.map((storys) => {
+            storys.storys.map((story) => {
+                aa.push(story.backgroundImage)
+            })
+        })
+
+        try {
+            await CacheAssetsAsync({
+                images: aa,
+            })
+        } catch (e) {
+            alert(e);
+        } finally {
+            this.setState({ finish: true })
+        }
     }
 
     _reloadMyStory = () => {
@@ -240,7 +259,7 @@ export default class StorysScreen extends React.Component {
     }
 
     _gobackHomeScreen = () => {
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('home');
     }
 
     _showKeyboard = () => {
@@ -315,23 +334,16 @@ export default class StorysScreen extends React.Component {
         }
     }
     //變換當前播放者
-    _switchMember = (index) => {
-        if (this.state.nowindex == 0 && index == -1) {
-            index = 0
-        }
-        // else if (this.state.nowindex == this.state.memberamount - 1 && index == 1) {
-
-        //     return null
-        //     // return this._gobackHomeScreen()
-
-        // } 
-        else if (index != 0) {
-            this.story_x += this.screenWidth * index;
-            this.ScrollStory.scrollTo({ x: this.story_x, y: 0 });
-            this.scrollEnabled = false
-            // setTimeout(() => this.scrollEnabled = true, 200)
-        }
-    }
+    // _switchMember = (index) => {
+    //     if (this.state.nowindex == 0 && index == -1) {
+    //         index = 0
+    //     } else if (index != 0) {
+    //         this.story_x += this.screenWidth * index;
+    //         this.ScrollStory.scrollTo({ x: this.story_x, y: 0 });
+    //         this.scrollEnabled = false
+    //         // setTimeout(() => this.scrollEnabled = true, 200)
+    //     }
+    // }
     //新增留言
     _addMessage = (index, text) => {
         this.story[index].message.push({
@@ -339,7 +351,7 @@ export default class StorysScreen extends React.Component {
             text: text,
         })
     }
-    //切換下一個撥放者
+    //切換下一個播放者
     _nextStory = async (buffer) => {
 
         let nowindex = this.state.nowindex + buffer
@@ -373,6 +385,8 @@ export default class StorysScreen extends React.Component {
             this.setState({ nowindex: nowindex })
             this._resettimer(this.story[nowindex].storys[0].time)
             await this._calltimer()
+        } else {
+            this._gobackHomeScreen()
         }
     }
 

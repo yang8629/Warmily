@@ -19,12 +19,14 @@ export default class CollectScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nowcollect: 0,
+      nowcollect: this.FireBase._getCollect(),
       progress: new Animated.Value(-this.screenWidth * 0.36 * 0.9),
       finish: this.FireBase._getFinish(),
     }
     this.FireBase._setFinish(true)
   }
+
+  
 
   collects = [{
     name: '洗衣機阿立',
@@ -74,9 +76,7 @@ export default class CollectScreen extends React.Component {
   }
 
   _changeCollect = (buffer) => {
-    this.setState({
-      nowcollect: buffer,
-    })
+    this.collectlist.scrollTo({ x: buffer * 170 - this.screenWidth / 2 + 85 })
   }
 
   _onScroll = (event) => {
@@ -154,7 +154,7 @@ export default class CollectScreen extends React.Component {
           </View>
 
           <View style={{ flex: 0.3, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <ScrollView style={{ width: '100%' }} contentInset={{ left: screenWidth / 2 - 85, right: screenWidth / 2 - 85 }} contentOffset={{ x: - screenWidth / 2 + 85 }} snapToInterval={170} snapToAlignment='center' decelerationRate='fast' horizontal={true} showsHorizontalScrollIndicator={false} onScroll={event => this._onScroll(event)} scrollEventThrottle={16} >
+            <ScrollView style={{ width: '100%' }} contentInset={{ left: screenWidth / 2 - 85, right: screenWidth / 2 - 85 }} contentOffset={{ x: - screenWidth / 2 + 85 }} snapToInterval={170} snapToAlignment='center' decelerationRate='fast' horizontal={true} showsHorizontalScrollIndicator={false} onScroll={event => this._onScroll(event)} scrollEventThrottle={16} ref={scroll => this.collectlist = scroll} >
               {collects}
             </ScrollView>
           </View>

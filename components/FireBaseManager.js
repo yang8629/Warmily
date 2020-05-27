@@ -14,7 +14,6 @@ export default class FireBaseManager {
     static FireBase = null;
 
     ready = false;
-    id = 1;     //1:小孩 2:家長
     remindamount = 6;
     data = null;
     storgeref = null;
@@ -192,6 +191,9 @@ export default class FireBaseManager {
                     case 'The email address is badly formatted.':
                         alert('Email格式錯誤')
                         break;
+                    case 'The password must be 6 characters long or more.':
+                        alert('密碼格式錯誤,至少要六個字')
+                        break;
                     default:
                         alert(error.message);
                         break;
@@ -210,7 +212,17 @@ export default class FireBaseManager {
                 x = true
             })
             .catch((error) => {
-                alert(error.message);
+                switch (error.message) {
+                    case 'The email address is badly formatted.':
+                        alert('Email格式錯誤')
+                        break;
+                    case 'The password is invalid or the user does not have a password.':
+                        alert('密碼錯誤')
+                        break;
+                    default:
+                        alert(error.message);
+                        break;
+                }
                 x = false
             });
 
@@ -286,7 +298,7 @@ export default class FireBaseManager {
     }
 
 
-    first = false;
+    first = true;
 
     _getFirsttime = () => {
         return this.first;
@@ -305,6 +317,8 @@ export default class FireBaseManager {
     _getFinish = () => {
         return this.finish;
     }
+
+    id = 1;     //1:小孩 2:家長
 
     _getID = () => {
         return this.id;
@@ -594,6 +608,17 @@ export default class FireBaseManager {
 
     _getFamily = () => {
         return this.allfamily[this.nowfamily]
+    }
+
+
+    collect = 0
+
+    _setCollect = (buffer) => {
+        this.collect = buffer
+    }
+
+    _getCollect = () => {
+        return this.collect
     }
 }
 

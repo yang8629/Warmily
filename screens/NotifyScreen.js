@@ -28,6 +28,7 @@ export default class NotifyScreen extends React.Component {
   notifies = [{
     headimg: require('../assets/images/f41.png'),
     text: '姐姐回覆了你的即時錄',
+    page: 'story',
     time: {
       hour: 19,
       date: 9,
@@ -38,6 +39,7 @@ export default class NotifyScreen extends React.Component {
   }, {
     headimg: require('../assets/images/f51.png'),
     text: '媽媽傳送了一則訊息',
+    page: 'chat',
     time: {
       hour: 7,
       date: 9,
@@ -48,6 +50,7 @@ export default class NotifyScreen extends React.Component {
   }, {
     headimg: require('../assets/images/f12.png'),
     text: '爸爸回覆了你的小提醒',
+    page: 'homestack',
     time: {
       hour: 7,
       date: 7,
@@ -58,6 +61,7 @@ export default class NotifyScreen extends React.Component {
   }, {
     headimg: require('../assets/images/f12.png'),
     text: '爸爸回覆了冰山溝通1',
+    page: 'chat',
     time: {
       hour: 12,
       date: 5,
@@ -68,6 +72,7 @@ export default class NotifyScreen extends React.Component {
   }, {
     headimg: require('../assets/images/f32.png'),
     text: '哥哥回覆了你的即時錄',
+    page: 'story',
     time: {
       hour: 7,
       date: 29,
@@ -75,9 +80,10 @@ export default class NotifyScreen extends React.Component {
       year: 2020,
     },
     new: false,
-  },{
+  }, {
     headimg: require('../assets/images/f51.png'),
     text: '媽媽傳送了一則訊息',
+    page: 'chat',
     time: {
       hour: 7,
       date: 26,
@@ -85,9 +91,10 @@ export default class NotifyScreen extends React.Component {
       year: 2020,
     },
     new: false,
-  },{
+  }, {
     headimg: require('../assets/images/f12.png'),
     text: '爸爸回覆了你的小提醒',
+    page: 'homestack',
     time: {
       hour: 7,
       date: 29,
@@ -123,6 +130,7 @@ export default class NotifyScreen extends React.Component {
                 headimg: buffer.headimg,
                 text: buffer.text,
                 new: buffer.new,
+                page: buffer.page,
                 time: '1小時以內',
               })
             } else {
@@ -130,6 +138,7 @@ export default class NotifyScreen extends React.Component {
                 headimg: buffer.headimg,
                 text: buffer.text,
                 new: buffer.new,
+                page: buffer.page,
                 time: (hour - buffer.time.hour) + '小時前',
               })
             }
@@ -138,6 +147,7 @@ export default class NotifyScreen extends React.Component {
               headimg: buffer.headimg,
               text: buffer.text,
               new: buffer.new,
+              page: buffer.page,
               time: (date - buffer.time.date) + '天前'
             })
           }
@@ -146,6 +156,7 @@ export default class NotifyScreen extends React.Component {
             headimg: buffer.headimg,
             text: buffer.text,
             new: buffer.new,
+            page: buffer.page,
             time: (month - buffer.time.month) + '月前'
           })
         }
@@ -154,6 +165,7 @@ export default class NotifyScreen extends React.Component {
           headimg: buffer.headimg,
           text: buffer.text,
           new: buffer.new,
+          page: buffer.page,
           time: (year - buffer.time.year) + '年前'
         })
       }
@@ -162,6 +174,10 @@ export default class NotifyScreen extends React.Component {
 
   _gotoHomeScreem = () => {
     this.props.navigation.navigate('home')
+  }
+
+  _linkPage = (page) => {
+    this.props.navigation.navigate(page)
   }
 
 
@@ -203,7 +219,7 @@ export default class NotifyScreen extends React.Component {
 
                     {this.recent.map((buffer, index) => {
                       return (
-                        <View key={index} style={[{ height: barheight, alignItems: 'center', flexDirection: 'row' }, buffer.new && { backgroundColor: 'white' }]} >
+                        <TouchableOpacity key={index} style={[{ height: barheight, alignItems: 'center', flexDirection: 'row' }, buffer.new && { backgroundColor: 'white' }]} onPress={() => this._linkPage(buffer.page)} activeOpacity={0.8} >
                           <View style={{ flex: 0.2, height: '70%', alignItems: 'flex-end' }} >
                             <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={buffer.headimg} />
                           </View>
@@ -213,7 +229,7 @@ export default class NotifyScreen extends React.Component {
                           <View style={{ flex: 0.2, alignItems: 'flex-end' }} >
                             <Text style={{ color: '#9D9D9D', fontSize: 12, lineHeight: 14, marginRight: 20 }} >{buffer.time}</Text>
                           </View>
-                        </View>
+                        </TouchableOpacity>
                       )
                     })
                     }
@@ -228,7 +244,7 @@ export default class NotifyScreen extends React.Component {
 
                     {this.before.map((buffer, index) => {
                       return (
-                        <View key={index} style={[{ height: barheight, alignItems: 'center', flexDirection: 'row' }, buffer.new && { backgroundColor: 'white' }]} >
+                        <TouchableOpacity key={index} style={[{ height: barheight, alignItems: 'center', flexDirection: 'row' }, buffer.new && { backgroundColor: 'white' }]} onPress={() => this._linkPage(buffer.page)} activeOpacity={0.8} >
                           <View style={{ flex: 0.2, height: '70%', alignItems: 'flex-end' }} >
                             <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={buffer.headimg} />
                           </View>
@@ -238,7 +254,7 @@ export default class NotifyScreen extends React.Component {
                           <View style={{ flex: 0.2, alignItems: 'flex-end' }} >
                             <Text style={{ color: '#9D9D9D', fontSize: 12, lineHeight: 14, marginRight: 20 }} >{buffer.time}</Text>
                           </View>
-                        </View>
+                        </TouchableOpacity>
                       )
                     })
                     }

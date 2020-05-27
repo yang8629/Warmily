@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Dimensions } from 'react-native';
 
 
-import TabBarIcon from '../components/TabBarIcon';
 import CollectScreen from '../screens/CollectScreen';
 import StoryScreen from '../screens/StoryScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -22,6 +21,7 @@ import IDScreen from '../screens/IDScreen';
 import GuideScreen from '../screens/GuideScreen';
 import FamilyScreen from '../screens/FamilyScreen';
 import NotifyScreen from '../screens/NotifyScreen';
+import QuestScreen from '../screens/QuestScreen';
 
 import FireBaseManager from '../components/FireBaseManager';
 
@@ -76,6 +76,10 @@ export default function StackNavigator({ navigation, route }) {
       <mainStack.Screen
         name="notify"
         component={NotifyScreen}
+      />
+      <mainStack.Screen
+        name="quest"
+        component={QuestScreen}
       />
     </mainStack.Navigator>
   );

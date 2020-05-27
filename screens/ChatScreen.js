@@ -5,6 +5,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 import { StackActions } from '@react-navigation/native';
 import { Video } from 'expo-av'
 import FireBaseManager from '../components/FireBaseManager';
+import CacheAssetsAsync from '../constants/CachedAssetAsync';
 import What from '../assets/Emoji/What.svg'
 import Angry from '../assets/Emoji/Angry.svg'
 import NotGood from '../assets/Emoji/NotGood.svg'
@@ -13,7 +14,6 @@ import Confused from '../assets/Emoji/Confused.svg'
 import Shocked from '../assets/Emoji/Shocked.svg'
 import Happy from '../assets/Emoji/Happy.svg'
 import Good from '../assets/Emoji/Good.svg'
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default class ChatScreen extends React.Component {
 
@@ -274,6 +274,24 @@ export default class ChatScreen extends React.Component {
       reload: false,
       id: this.FireBase._getID()
     }
+    this._loadAssetsAsync()
+  }
+
+  async _loadAssetsAsync() {
+    var aa = []
+    this.collects.map(buffer => {
+      aa.push(buffer.video)
+    })
+
+    try {
+      await CacheAssetsAsync({
+        videos: aa,
+      })
+    } catch (e) {
+      alert(e);
+    } finally {
+      
+    }
   }
 
   _setHint = () => {
@@ -300,6 +318,10 @@ export default class ChatScreen extends React.Component {
 
   _gotoIcebergScreen = () => {
     this.props.navigation.navigate('iceberg')
+  }
+
+  _firstIcebergScreen = () => {
+    this.props.navigation.navigate('quest')
   }
 
   _taggleChat = () => {
@@ -539,6 +561,8 @@ export default class ChatScreen extends React.Component {
       showvideo: true,
     })
 
+    this.FireBase._setCollect(this.random)
+
     // this.setState({
     //   issuepage: false,
     //   thoughtpage: false,
@@ -735,7 +759,7 @@ export default class ChatScreen extends React.Component {
                 <Text style={{ fontSize: 15, lineHeight: 25, color: '#9D9C9B', textAlign: 'center' }} >有什麼想法想跟對方分享的嗎?{'\n'}有什麼說不出口的話嗎?</Text>
               </View>
               <View style={{ alignSelf: 'center', marginLeft: '-10%' }} >
-                <TouchableOpacity style={{ flexDirection: 'row', backgroundColor: '#89C4C4', borderRadius: '10%', alignItems: 'center', justifyContent: 'center', paddingVertical: 4, paddingLeft: 5, paddingRight: 5 }} onPress={() => this._gotoIcebergScreen()} >
+                <TouchableOpacity style={{ flexDirection: 'row', backgroundColor: '#89C4C4', borderRadius: '10%', alignItems: 'center', justifyContent: 'center', paddingVertical: 4, paddingLeft: 5, paddingRight: 5 }} onPress={() => this._firstIcebergScreen()} >
                   <Image style={{ alignSelf: 'center', width: 20, aspectRatio: 1, resizeMode: 'contain' }} source={require('../assets/icon/pencil.png')} />
                   <Text style={{ fontSize: 16, lineHeight: 19, color: 'white' }} >深入對話</Text>
                 </TouchableOpacity>

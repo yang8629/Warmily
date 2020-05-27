@@ -25,7 +25,6 @@ export default class IcebergScreen extends React.Component {
   screenWidth = Dimensions.get('screen').width;
   screenHeight = Dimensions.get('screen').height;
   topbarWidth = this.screenWidth * 0.35;
-  first = this.FireBase._getFirsttime();
 
   state = {
     buffer: true,
@@ -517,7 +516,7 @@ export default class IcebergScreen extends React.Component {
                   </View>
 
                   <View style={{ width: '60%', alignItems: 'center', justifyContent: 'flex-start', paddingTop: '5%' }}>
-                    <TouchableOpacity style={{ width: '60%', height: screenHeight * 0.08, borderRadius: 25, backgroundColor: '#FAC75E', alignItems: 'center', justifyContent: 'center' }} activeOpacity={0.5} onPress={() => this._gotoChatScreen(true)} >
+                    <TouchableOpacity style={[{ width: '60%', height: screenHeight * 0.08, borderRadius: 30, backgroundColor: '#FAC75E', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} activeOpacity={0.5} onPress={() => this._gotoChatScreen(true)} >
                       <Text style={{ fontSize: 16, lineHeight: 19, color: 'white' }}>送出</Text>
                     </TouchableOpacity>
                   </View>
@@ -531,7 +530,7 @@ export default class IcebergScreen extends React.Component {
           </KeyboardAvoidingView>
 
 
-          <TouchableOpacity style={{ position: 'absolute', width: 40, height: 40, top: 30, right: 10 }} onPress={() => this._gotoChatScreen(false)} >
+          <TouchableOpacity style={[{ position: 'absolute', width: 40, height: 40, top: 30, left: 15 }, styles.shadow]} onPress={() => this._gotoChatScreen(false)} >
             <Icon name='close' size={40} color={this.closecolor} />
           </TouchableOpacity>
 
