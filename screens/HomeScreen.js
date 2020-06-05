@@ -90,7 +90,7 @@ export default class HomeScreen extends React.Component {
 
   _gotoNotifyScreen = () => {
     this.props.navigation.navigate('notify');
-    this.remind = this.FireBase._reSet(this.remind.length);
+    this.remind = this.FireBase._resetRemind(this.remind.length);
     this._DeletRemind();
   }
 

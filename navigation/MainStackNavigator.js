@@ -30,8 +30,8 @@ const mainStack = createStackNavigator();
 const loginStack = createStackNavigator();
 const homeStack = createStackNavigator();
 const FireBase = FireBaseManager.getInstance()
-var firsttime = FireBase._getFirsttime()
-const INITIAL_ROUTE_NAME = firsttime ? 'firstscreen' : 'loginstack'
+// var firsttime = FireBase._getFirsttime()
+// const INITIAL_ROUTE_NAME = firsttime ? 'firstscreen' : 'loginstack'
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;

@@ -39,19 +39,8 @@ export default class ChatScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
-
-  speak = [{
-    text: '你今天下午要幹嘛',
-    img: require('../assets/images/f32.png'),
-    type: 1,
-  }, {
-    text: '怎麼了',
-    type: 0,
-  }, {
-    text: '要去看電影嗎?',
-    img: require('../assets/images/f32.png'),
-    type: 1,
-  },]
+  //type: 0 = 自己, 1 = 對方, 2 = emoji
+  speak = []
 
   issues = this.family.issues
 
@@ -247,6 +236,7 @@ export default class ChatScreen extends React.Component {
       reload = !this.state.reload;
       this.setState({ reload: reload });
     });
+    this.speak = this.FireBase._getChat()
     this.state = {
       issuepage: false,
       hintPage: false,
@@ -270,11 +260,30 @@ export default class ChatScreen extends React.Component {
       openchat: false,
       inputtext: null,
       protocolorder: 0,
-      speakamount: 2,
+      speakamount: this.speak.length - 1,
       reload: false,
-      id: this.FireBase._getID()
+      id: this.FireBase._getID(),
     }
-    this._loadAssetsAsync()
+    this._loadAssetsAsync();
+    // this.aa = this.storgeref.collection('Chat').doc('Target').collection('Mom').onSnapshot((snapshot, e) => {
+      
+    //   if (e != null) {
+    //     alert("listen:error" + e);
+    //     return;
+    //   }
+
+    //   snapshot.docChanges().forEach(function (change) {
+    //     if (change.type === "added") {
+    //       this.chat.push(change.doc.data())
+    //     }
+    //     if (change.type === "modified") {
+    //       alert(change.doc.data().text + 'M');
+    //     }
+    //     if (change.type === "removed") {
+    //       alert(change.doc.data().text);
+    //     }
+    //   });
+    // })
   }
 
   async _loadAssetsAsync() {
@@ -290,7 +299,7 @@ export default class ChatScreen extends React.Component {
     } catch (e) {
       alert(e);
     } finally {
-      
+
     }
   }
 
@@ -346,7 +355,6 @@ export default class ChatScreen extends React.Component {
       openbottom,
       openchat,
     })
-
   }
 
   _taggleText = () => {
@@ -451,10 +459,13 @@ export default class ChatScreen extends React.Component {
     const text = this.state.inputtext;
 
     if (text != null) {
-      this.speak.push({
+      content = {
         text: text,
         type: 0,
-      })
+        from: this.state.id,
+      }
+
+      this.speak = this.FireBase._setChat(content)
 
       this.textInput.clear();
       this.scrollView.scrollToEnd();
@@ -670,10 +681,13 @@ export default class ChatScreen extends React.Component {
   }
 
   _sentEmoji = (buffer) => {
-    this.speak.push({
+    content = {
       order: buffer,
       type: 2,
-    })
+      from: this.state.id,
+    }
+
+    this.FireBase._setChat(content)
     this.scrollView.scrollToEnd();
     speakamount = this.state.speakamount + 1;
     this.setState({ speakamount: speakamount })
@@ -775,18 +789,26 @@ export default class ChatScreen extends React.Component {
     })
 
     const speak = this.speak.map((buffer, index) => {
-      if (buffer.type == 1) {
-        return (
-          <GetSpeak key={index} text={buffer.text} img={buffer.img} />
-        )
-      } else if (buffer.type == 0) {
-        return (
-          <MySpeak key={index} text={buffer.text} />
-        )
-      } else if (buffer.type == 2) {
-        return (
-          <Emoji key={index} order={buffer.order} />
-        )
+      if (buffer.from == id) {
+        if (buffer.type == 2) {
+          return (
+            <Emoji key={index} order={buffer.order} />
+          )
+        } else {
+          return (
+            <MySpeak key={index} text={buffer.text} />
+          )
+        }
+      } else {
+        if (buffer.type == 2) {
+          return (
+            <Emoji key={index} order={buffer.order} />
+          )
+        } else {
+          return (
+            <GetSpeak key={index} text={buffer.text} img={buffer.img} />
+          )
+        }
       }
     })
 
@@ -1450,7 +1472,7 @@ export default class ChatScreen extends React.Component {
 
                             <View style={{ position: 'absolute', width: 40, height: 40, left: 10, top: 30 }}>
                               <TouchableOpacity onPress={() => this._toggleIcebergdetail()} >
-                                <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={require('../assets/icon/X.png')} />
+                                <Image style={{ width: '80%', height: '80%', resizeMode: 'contain' }} source={require('../assets/icon/X.png')} />
                               </TouchableOpacity>
                             </View>
 
@@ -1564,7 +1586,47 @@ export default class ChatScreen extends React.Component {
 
                         <View style={styles.chatcontent}>
 
-                          {this.speak[speakamount].type == 0 ?
+                          {this.speak[speakamount].from == id ?
+                            <View style={styles.chattop}>
+                              {this.speak[speakamount].type == 2 ?
+                                <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
+                                  <View style={styles.triangle} />
+                                  <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                    <Emoji order={this.speak[speakamount].order} />
+                                  </View>
+                                </View>
+                                :
+                                <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
+                                  <View style={styles.triangle} />
+                                  <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                    <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
+                                  </View>
+                                </View>
+                              }
+                            </View>
+                            :
+                            <View style={styles.chattop}>
+                              {this.speak[speakamount].type == 2 ?
+                                <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
+                                  <View style={styles.triangle} />
+                                  <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                    <Emoji order={this.speak[speakamount].order} />
+                                  </View>
+                                </View>
+                                :
+                                <View style={{ alignSelf: 'center', justifyContent: 'flex-end', left: '-5%' }}>
+                                  <View style={styles.triangleL} />
+                                  <View style={[styles.chatbubble, { backgroundColor: '#9BD0D0' }]}>
+                                    <Text style={{ fontSize: 16, lineHeight: 19, color: '#FFFFFF' }}>{this.speak[speakamount].text}</Text>
+                                  </View>
+                                </View>
+                              }
+                            </View>
+                          }
+
+
+
+                          {/* {this.speak[speakamount].type == 0 ?
                             <View style={styles.chattop}>
                               <View style={{ alignSelf: 'center', justifyContent: 'flex-end', right: '-5%' }}>
                                 <View style={styles.triangle} />
@@ -1601,12 +1663,12 @@ export default class ChatScreen extends React.Component {
                             </View>
                             :
                             null
-                          }
+                          } */}
 
                           <View style={styles.chatimage}>
                             <View style={{ flex: 0.3, alignItems: 'center' }}>
                               <View style={{ height: '60%' }}>
-                                {this.speak[speakamount].type == 1 ?
+                                {this.speak[speakamount].from != id ?
                                   <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.family.monstergif} />
                                   :
                                   <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.family.monsterpng} />
@@ -1616,7 +1678,7 @@ export default class ChatScreen extends React.Component {
                             </View>
                             <View style={{ flex: 0.3 }}>
                               <View style={{ height: '60%', alignItems: 'center' }}>
-                                {this.speak[speakamount].type == 0 || this.speak[speakamount].type == 2 ?
+                                {this.speak[speakamount].from == id ?
                                   <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.monstergif} />
                                   :
                                   <Image style={{ height: '100%', aspectRatio: 1, resizeMode: 'contain' }} source={this.monsterpng} />
@@ -1862,7 +1924,7 @@ class GetSpeak extends React.Component {
   render() {
     const img = this.props.img;
     return (
-      <View style={[styles.chattext, { justifyContent: 'flex-start', flexDirection: 'row', alignSelf: 'flex-start' }]}>
+      <View style={[styles.chattext, { justifyContent: 'flex-start', flexDirection: 'row', alignSelf: 'flex-start', marginBottom: 10 }]}>
         <View style={styles.headbox}>
           <Image source={img} style={styles.headimg} />
         </View>
@@ -2188,7 +2250,7 @@ const styles = StyleSheet.create({
   },
   triangle: {
     position: 'absolute',
-    right: -15,
+    right: -10,
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
@@ -2200,7 +2262,7 @@ const styles = StyleSheet.create({
     borderRightColor: 'transparent',
     borderBottomColor: '#9BD0D0',
     transform: [
-      { rotate: '130deg' }
+      { rotate: '120deg' }
     ]
   },
   triangleL: {
@@ -2217,7 +2279,7 @@ const styles = StyleSheet.create({
     borderRightColor: 'transparent',
     borderBottomColor: '#9BD0D0',
     transform: [
-      { rotate: '-130deg' }
+      { rotate: '-120deg' }
     ]
   },
   triangle_w: {

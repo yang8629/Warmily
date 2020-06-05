@@ -82,7 +82,7 @@ export default class StorysScreen extends React.Component {
         head: require('../assets/images/f31.png'),
         reading: false,
         storys: [{
-            backgroundImage: require('../assets/images/story.png'),
+            backgroundImage: require('../assets/images/bb.jpg'),
             time: 5,
         }, {
             backgroundImage: require('../assets/images/story1.png'),
@@ -114,7 +114,7 @@ export default class StorysScreen extends React.Component {
             backgroundImage: require('../assets/images/story1.png'),
             time: 5,
         }, {
-            backgroundImage: require('../assets/images/story.png'),
+            backgroundImage: require('../assets/images/cc.jpg'),
             time: 4,
         }, {
             backgroundImage: require('../assets/images/aa.jpg'),
@@ -140,7 +140,7 @@ export default class StorysScreen extends React.Component {
         head: require('../assets/images/f51.png'),
         reading: false,
         storys: [{
-            backgroundImage: require('../assets/images/story1.png'),
+            backgroundImage: require('../assets/images/cc.jpg'),
             time: 5,
         }, {
             backgroundImage: require('../assets/images/story.png'),

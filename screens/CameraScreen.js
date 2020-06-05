@@ -50,11 +50,9 @@ export default class CameraScreen extends React.Component {
 
 
     getPermissionAsync = async () => {
-        if (Constants.platform.ios) {
-            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-            if (status !== 'granted') {
-                alert('Sorry, we need camera roll permissions to make this work!');
-            }
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
         }
     }
 
@@ -289,9 +287,11 @@ export default class CameraScreen extends React.Component {
                                 </View>
                                 {/* <View style={[styles.takepictureBtn, { width: 80, height: 80, borderRadius: 40, backgroundColor: 'red' }]} opacity={0.8} /> */}
                             </View>
-                            <TouchableHighlight style={[styles.turned, styles.shadow, { borderRadius: 22, padding: 2 }]} onPress={() => this._turnedCamera()} underlayColor='rgba(150,150,150,0.5)' >
-                                <Icon name='cached' size={40} color='white' />
-                            </TouchableHighlight>
+                            <View style={{ position: 'absolute', width: '30%', height: '50%', marginTop: 300, alignSelf: 'flex-start', alignItems: 'flex-end', justifyContent: 'flex-end' }} >
+                                <TouchableHighlight style={[styles.turned, styles.shadow, { borderRadius: 22, padding: 2 }]} onPress={() => this._turnedCamera()} underlayColor='rgba(150,150,150,0.5)' >
+                                    <Icon name='cached' size={40} color='white' />
+                                </TouchableHighlight>
+                            </View>
                             <TouchableHighlight style={[{ position: 'absolute', marginLeft: 20, marginTop: 30, borderRadius: 22, padding: 2 }, styles.shadow]} onPress={() => this._goBack()} underlayColor='rgba(150,150,150,0.5)' >
                                 <Icon name='close' size={40} color='white' />
                             </TouchableHighlight>
@@ -347,9 +347,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     turned: {
-        position: 'absolute',
-        marginTop: 600,
-        marginLeft: 60,
+        top: -20,
     },
     takepictures: {
         width: '50%',

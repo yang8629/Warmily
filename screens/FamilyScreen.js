@@ -60,10 +60,19 @@ export default class FamilyScreen extends React.Component {
     return (
       <KeyboardAvoidingView behavior='position' >
         <View style={{ backgroundColor: '#F4EDE9', width: '100%', height: '100%' }}>
+          <View style={{ flex: 0.1 }}>
+            <View style={{ marginTop: 40, flexDirection: 'row' }}>
+              <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity style={{ paddingHorizontal: 10 }} activeOpacity={1} onPress={() => this._goBack()} >
+                  <Icon name='angle-left' size={40} color='#6E6E6E' type='font-awesome' />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
 
-          <View style={{ flex: 0.75, alignItems: 'center', justifyContent: 'center' }} >
-            <View style={{ marginBottom: 40, height: '40%' }} >
-              <Image style={{ height: '100%', resizeMode: 'contain' }} source={require('../assets/images/logo_icon.png')} />
+          <View style={{ flex: 0.65, alignItems: 'center', justifyContent: 'center' }} >
+            <View style={{ marginBottom: 40, height: '50%' }} >
+              <Image style={{ height: '90%', resizeMode: 'contain' }} source={require('../assets/images/logo_icon.png')} />
             </View>
             <View>
               <Text style={{ color: '#818181' }} >與家人們共同營造一個家庭幸福空間吧 !</Text>
@@ -95,7 +104,6 @@ export default class FamilyScreen extends React.Component {
             </View>
 
           </View>
-
         </View>
 
         {this.state.Keyboard ?

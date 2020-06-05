@@ -149,6 +149,10 @@ export default class SelectScreen extends React.Component {
     this.props.navigation.navigate('id')
   }
 
+  _goBack = () => {
+    this.props.navigation.goBack()
+  }
+
   _onChangeText = (text) => {
     this.setState({
       textinput: text,
@@ -227,8 +231,15 @@ export default class SelectScreen extends React.Component {
         <View style={styles.container} >
           <View style={styles.header} />
           <View style={{ flex: 0.6 }}>
-            <View style={{ marginTop: 30, marginLeft: 30 }}>
-              <Text style={{ color: '#6E6E6E', fontSize: 18 }}>角色選擇</Text>
+            <View style={{ marginTop: 20, flexDirection: 'row' }}>
+              <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity style={{ paddingHorizontal: 10 }} activeOpacity={1} onPress={() => this._goBack()} >
+                  <Icon name='angle-left' size={40} color='#6E6E6E' type='font-awesome' />
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 0.6, alignSelf: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#6E6E6E', fontSize: 18 }}>個人角色選擇</Text>
+              </View>
             </View>
             <View style={{ alignItems: 'center' }}>
               <View style={{ height: this.screenHeight * 2 / 5 }} >
@@ -247,8 +258,8 @@ export default class SelectScreen extends React.Component {
               </ScrollView>
             </View>
             <Animated.View style={{ position: 'absolute', height: '40%', width: '100%', bottom: this.state.inputheigh, justifyContent: 'center' }}>
-              <View style={{ width: '70%', height: '60%', backgroundColor: 'white', borderRadius: '45%', alignSelf: 'center', justifyContent: 'center', flexDirection: 'row', borderWidth: 1, borderColor: '#8AC4C4' }}>
-                <TextInput style={{ flex: 0.75, fontSize: 18, lineHeight: 21, paddingLeft: 20 }} placeholder={'輸入暱稱'} placeholderTextColor={'#8AC4C4'} clearButtonMode='while-editing' onChangeText={(text) => this._onChangeText(text)} />
+              <View style={{ width: '70%', height: '60%', backgroundColor: 'white', borderRadius: '45%', alignSelf: 'center', justifyContent: 'center', flexDirection: 'row', }}>
+                <TextInput style={{ flex: 0.75, fontSize: 18, lineHeight: 21, paddingLeft: 20, color: '#6E6E6E' }} placeholder={'輸入暱稱'} placeholderTextColor={'#C4C4C4'} clearButtonMode='while-editing' onChangeText={(text) => this._onChangeText(text)} />
                 <View style={{ flex: 0.25, justifyContent: 'center' }}>
                   <TouchableOpacity style={[{ width: '70%', aspectRatio: 1, borderRadius: '50%', backgroundColor: '#8AC4C4', alignItems: 'center', justifyContent: 'center' }, styles.shadow]} onPress={() => this._gotoHomeScreen()} >
                     <Image style={{ width: '60%', height: '60%', resizeMode: 'contain' }} source={require('../assets/icon/arrow_w.png')} />
@@ -286,7 +297,7 @@ class Character extends React.Component {
     return (
       <Animated.View style={[{ width: characterWidth, aspectRatio: 1, borderRadius: '50%', backgroundColor: 'white', marginLeft: 20, alignItems: 'center', justifyContent: 'center', top: new Animated.Value(aa).interpolate({ inputRange: [-characterWidth * 3, -characterWidth * 2, -characterWidth, 0, characterWidth, characterWidth * 2, characterWidth * 3], outputRange: [160, 80, 20, 0, 20, 80, 160] }) }, this.props.index == 0 && { marginLeft: 30 }, this.props.select == this.props.index && { borderWidth: 3, borderColor: '#9BD0D0' }]} >
         <TouchableOpacity onPress={this.props.onPress} activeOpacity={0.8} >
-          <Image style={{ width: characterWidth * 3 / 5, resizeMode: 'contain', }} source={this.props.png} />
+          <Image style={{ width: characterWidth * 7 / 10, resizeMode: 'contain', }} source={this.props.png} />
         </TouchableOpacity>
       </Animated.View>
     )
@@ -296,7 +307,7 @@ class Character extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E4DBD5',
+    backgroundColor: '#F4EDE9',
     lineHeight: 21,
   },
   header: {

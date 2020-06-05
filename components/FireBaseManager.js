@@ -162,19 +162,18 @@ export default class FireBaseManager {
     storys = []
 
     static getInstance = () => {
-
         if (!firebase.apps.length) {
             this.FireBase = new FireBaseManager();
             firebase.initializeApp(firebaseConfig);
             storgeref = firebase.firestore().collection('Authen').doc('id');
             buffer = storgeref.collection('Remind').get().then(querySnapshot => {
-                querySnapshot.forEach(doc => { this.FireBase._setData(doc.data()) })
+                querySnapshot.forEach(doc => { this.FireBase._initialData(doc.data()) })
             }).catch(error => alert(error.message))
             // buffer = setTimeout(() => { this.ready = true }, 2000);
             this.FireBase._setStorgeref(storgeref);
+            this.FireBase._resetChat();
             this.FireBase._setReady(true);
         }
-
         return this.FireBase;
     }
 
@@ -271,7 +270,7 @@ export default class FireBaseManager {
         return this.ready;
     }
 
-    _setData = (doc) => {
+    _initialData = (doc) => {
         var contents = [], messages = []
 
         doc.content.forEach(content => {
@@ -325,7 +324,7 @@ export default class FireBaseManager {
     }
 
     _setID = (id) => {
-        this.id = id
+        this.id = id == null ? 1 : id
         return this.id
     }
 
@@ -382,7 +381,7 @@ export default class FireBaseManager {
         return this.remind
     }
 
-    _reSet = (amount) => {
+    _resetRemind = (amount) => {
         for (let index = 0; index < amount; index++) {
             this.storgeref.collection('Remind').doc(index.toString()).delete()
         }
@@ -619,6 +618,58 @@ export default class FireBaseManager {
 
     _getCollect = () => {
         return this.collect
+    }
+
+    chat = []
+    aa = null
+
+    _initialChat = (doc) => {
+        this.chat.push(doc)
+    }
+
+    _resetChat = async () => {
+
+        buffer = await this.storgeref.collection('Chat').doc('Target').collection('Mom').get().then(querySnapshot => {
+            querySnapshot.forEach(doc => { this._initialChat(doc.data()) })
+        }).catch(error => alert(error.message))
+
+
+        for (let index = 0; index < this.chat.length; index++) {
+            this.storgeref.collection('Chat').doc('Target').collection('Mom').doc(index.toString()).delete()
+        }
+
+        all = [{
+            text: '你今天下午要幹嘛',
+            img: require('../assets/images/f32.png'),
+            type: 1,
+            from: 2,
+        }, {
+            text: '怎麼了',
+            img: require('../assets/images/f12.png'),
+            type: 0,
+            from: 1,
+        }, {
+            text: '要去看電影嗎?',
+            img: require('../assets/images/f32.png'),
+            type: 1,
+            from: 2,
+        },]
+
+        all.forEach((x, index) =>
+            this.storgeref.collection('Chat').doc('Target').collection('Mom').doc(index.toString()).set(x)
+        )
+
+        this.chat = all
+    }
+
+    _getChat = () => {
+        return this.chat
+    }
+
+    _setChat = (buffer) => {
+        this.storgeref.collection('Chat').doc('Target').collection('Mom').doc(this.chat.length.toString()).set(buffer)
+        this.chat.push(buffer)
+        return this.chat
     }
 }
 
